@@ -1,0 +1,72 @@
+version: '3.9'
+
+services:
+  # ── PostgreSQL + PostGIS ──
+  postgres:
+    image: postgis/postgis:15-3.3
+    container_name: ecoroute_db
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-ecoroute}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-ecoroute_secret_2025}
+      POSTGRES_DB: ${POSTGRES_DB:-ecoroute_db}
+    ports:
+      - "${POSTGRES_PORT:-5432}:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./database/migrations:/docker-entrypoint-initdb.d
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ecoroute"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # ── Redis (session & cache) ──
+  redis:
+    image: redis:7-alpine
+    container_name: ecoroute_redis
+    restart: unless-stopped
+    ports:
+      - "${REDIS_PORT:-6379}:6379"
+    volumes:
+      - redis_data:/data
+
+  # ── Backend API ──
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: ecoroute_backend
+    restart: unless-stopped
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_started
+    env_file:
+      - ./backend/.env
+    ports:
+      - "${BACKEND_PORT:-4000}:4000"
+    volumes:
+      - ./backend/src:/app/src
+    command: npm run dev
+
+  # ── Frontend ──
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: ecoroute_frontend
+    restart: unless-stopped
+    depends_on:
+      - backend
+    env_file:
+      - ./frontend/.env.local
+    ports:
+      - "${FRONTEND_PORT:-3000}:3000"
+    volumes:
+      - ./frontend/src:/app/src
+
+volumes:
+  postgres_data:
+  redis_data:
