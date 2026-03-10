@@ -46,6 +46,27 @@ app.use(cors({
 app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true }));
 
+// ── Root Route ──
+app.get('/', (_, res) => {
+  res.json({
+    service: 'EcoRoute API',
+    version: '1.0.0',
+    status: 'қосылған',
+    endpoints: {
+      health: '/health',
+      api: {
+        auth: '/api/auth',
+        routes: '/api/routes',
+        pois: '/api/pois',
+        bookings: '/api/bookings',
+        eco: '/api/eco',
+        navigate: '/api/navigate',
+      },
+    },
+    message: 'API жұмыс істеп тұр. Толық құжаттама үшін /health сілтемесіне кіріңіз.',
+  });
+});
+
 // ── Health Check ──
 app.get('/health', (_, res) => {
   res.json({ status: 'ok', service: 'EcoRoute API', version: '1.0.0' });
