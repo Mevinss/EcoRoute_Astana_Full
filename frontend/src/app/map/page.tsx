@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState, useCallback } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { api } from '@/lib/api';
 import Link from 'next/link';
@@ -15,6 +15,9 @@ const ROUTE_TYPES = [
   { key: 'mixed', label: 'Аралас', icon: '🔄', color: '#A78BFA' },
 ];
 
+// Average car emission factor: ~170 g CO₂ per km (used to calculate CO₂ savings vs driving)
+const CO2_G_PER_KM = 170;
+
 const DIFFICULTY_MAP: Record<string, { label: string; color: string; bg: string }> = {
   easy: { label: 'Оңай', color: '#22C55E', bg: '#DCFCE7' },
   medium: { label: 'Орташа', color: '#FBBF24', bg: '#FEF3C7' },
@@ -25,11 +28,25 @@ export default function MapPage() {
   const mapContainer = useRef<HTMLDivElement>(null);
   const map = useRef<any>(null);
   const markersRef = useRef<any[]>([]);
+  const fromMarkerRef = useRef<any>(null);
+  const toMarkerRef = useRef<any>(null);
   const [activeType, setActiveType] = useState('all');
   const [selectedRoute, setSelectedRoute] = useState<any>(null);
   const [mapLoaded, setMapLoaded] = useState(false);
   const [showRoutesList, setShowRoutesList] = useState(false);
   const [hoveredRoute, setHoveredRoute] = useState<number | null>(null);
+
+  // ── Route Planner state ──────────────────────────────────────
+  const [plannerOpen, setPlannerOpen] = useState(false);
+  const [planStep, setPlanStep] = useState<'from' | 'to'>('from');
+  const [fromPoint, setFromPoint] = useState<[number, number] | null>(null);
+  const [toPoint, setToPoint] = useState<[number, number] | null>(null);
+  const [navMode, setNavMode] = useState<'walking' | 'cycling'>('walking');
+  const [navRoute, setNavRoute] = useState<any>(null);
+  const [navStats, setNavStats] = useState<{ distance_m: number; duration_s: number } | null>(null);
+  const [isNavigating, setIsNavigating] = useState(false);
+  const [navError, setNavError] = useState<string | null>(null);
+  const [geoLoading, setGeoLoading] = useState(false);
 
   const { data: routesData, isLoading } = useQuery({
     queryKey: ['routes', activeType],
@@ -187,6 +204,184 @@ export default function MapPage() {
     }
   };
 
+  // ── Route Planner: map click handler ──────────────────────────
+  useEffect(() => {
+    if (!map.current || !mapLoaded) return;
+    const onClick = (e: any) => {
+      if (!plannerOpen) return;
+      const { lng, lat } = e.lngLat;
+      if (planStep === 'from') {
+        setFromPoint([lng, lat]);
+        setPlanStep('to');
+      } else {
+        setToPoint([lng, lat]);
+      }
+    };
+    map.current.on('click', onClick);
+    return () => { map.current?.off('click', onClick); };
+  }, [mapLoaded, plannerOpen, planStep]);
+
+  // ── Route Planner: place markers when points change ───────────
+  useEffect(() => {
+    if (!map.current || !maplibregl) return;
+    fromMarkerRef.current?.remove();
+    if (fromPoint) {
+      const el = document.createElement('div');
+      el.innerHTML = '🟢';
+      el.style.cssText = 'font-size:26px;cursor:pointer;filter:drop-shadow(0 2px 6px rgba(0,0,0,0.5));';
+      fromMarkerRef.current = new maplibregl.Marker({ element: el })
+        .setLngLat(fromPoint)
+        .setPopup(new maplibregl.Popup({ closeButton: false }).setText('Бастапқы нүкте'))
+        .addTo(map.current);
+    }
+  }, [fromPoint, mapLoaded]);
+
+  useEffect(() => {
+    if (!map.current || !maplibregl) return;
+    toMarkerRef.current?.remove();
+    if (toPoint) {
+      const el = document.createElement('div');
+      el.innerHTML = '🔴';
+      el.style.cssText = 'font-size:26px;cursor:pointer;filter:drop-shadow(0 2px 6px rgba(0,0,0,0.5));';
+      toMarkerRef.current = new maplibregl.Marker({ element: el })
+        .setLngLat(toPoint)
+        .setPopup(new maplibregl.Popup({ closeButton: false }).setText('Соңғы нүкте'))
+        .addTo(map.current);
+    }
+  }, [toPoint, mapLoaded]);
+
+  // ── Route Planner: display calculated route on map ────────────
+  useEffect(() => {
+    if (!map.current || !mapLoaded) return;
+    if (map.current.getSource('nav-route')) {
+      map.current.removeLayer('nav-route-outline');
+      map.current.removeLayer('nav-route-line');
+      map.current.removeSource('nav-route');
+    }
+    if (!navRoute) return;
+    map.current.addSource('nav-route', {
+      type: 'geojson',
+      data: { type: 'Feature', properties: {}, geometry: navRoute },
+    });
+    map.current.addLayer({
+      id: 'nav-route-outline',
+      type: 'line',
+      source: 'nav-route',
+      layout: { 'line-join': 'round', 'line-cap': 'round' },
+      paint: {
+        'line-color': '#FFFFFF',
+        'line-width': 10,
+        'line-opacity': 0.5,
+      },
+    });
+    map.current.addLayer({
+      id: 'nav-route-line',
+      type: 'line',
+      source: 'nav-route',
+      layout: { 'line-join': 'round', 'line-cap': 'round' },
+      paint: {
+        'line-color': navMode === 'cycling' ? '#FBBF24' : '#38BDF8',
+        'line-width': 5,
+        'line-opacity': 0.95,
+      },
+    });
+
+    // Zoom to fit the route
+    if (navRoute.coordinates?.length) {
+      const lngs = navRoute.coordinates.map((c: number[]) => c[0]);
+      const lats = navRoute.coordinates.map((c: number[]) => c[1]);
+      map.current.fitBounds(
+        [[Math.min(...lngs), Math.min(...lats)], [Math.max(...lngs), Math.max(...lats)]],
+        { padding: 60, duration: 1200 }
+      );
+    }
+  }, [navRoute, mapLoaded, navMode]);
+
+  // ── Route Planner: get user's current GPS location ────────────
+  const getUserLocation = useCallback(() => {
+    if (!navigator.geolocation) return;
+    setGeoLoading(true);
+    navigator.geolocation.getCurrentPosition(
+      (pos) => {
+        const { longitude, latitude } = pos.coords;
+        setFromPoint([longitude, latitude]);
+        setPlanStep('to');
+        setGeoLoading(false);
+        map.current?.flyTo({ center: [longitude, latitude], zoom: 15, duration: 1000 });
+      },
+      () => setGeoLoading(false),
+      { enableHighAccuracy: true, timeout: 10000 }
+    );
+  }, []);
+
+  // ── Route Planner: call backend navigate API ──────────────────
+  const handleNavigate = useCallback(async () => {
+    if (!fromPoint || !toPoint) return;
+    setIsNavigating(true);
+    setNavError(null);
+    setNavRoute(null);
+    setNavStats(null);
+    try {
+      const res = await api.get('/navigate', {
+        params: {
+          from_lat: fromPoint[1],
+          from_lng: fromPoint[0],
+          to_lat: toPoint[1],
+          to_lng: toPoint[0],
+          mode: navMode,
+        },
+      });
+      setNavRoute(res.data.geojson);
+      setNavStats({ distance_m: res.data.distance_m, duration_s: res.data.duration_s });
+    } catch (err: any) {
+      setNavError(err?.response?.data?.error || 'Маршрут алу кезінде қате орын алды');
+    } finally {
+      setIsNavigating(false);
+    }
+  }, [fromPoint, toPoint, navMode]);
+
+  // ── Route Planner: reset everything ──────────────────────────
+  const resetPlanner = useCallback(() => {
+    setFromPoint(null);
+    setToPoint(null);
+    setNavRoute(null);
+    setNavStats(null);
+    setNavError(null);
+    setPlanStep('from');
+    fromMarkerRef.current?.remove();
+    toMarkerRef.current?.remove();
+    fromMarkerRef.current = null;
+    toMarkerRef.current = null;
+    if (map.current?.getSource('nav-route')) {
+      map.current.removeLayer('nav-route-outline');
+      map.current.removeLayer('nav-route-line');
+      map.current.removeSource('nav-route');
+    }
+  }, []);
+
+  const togglePlanner = useCallback(() => {
+    if (plannerOpen) {
+      resetPlanner();
+    }
+    setPlannerOpen((v) => !v);
+  }, [plannerOpen, resetPlanner]);
+
+  const handleModeChange = useCallback((mode: 'walking' | 'cycling') => {
+    setNavMode(mode);
+    setNavRoute(null);
+    setNavStats(null);
+  }, []);
+
+  const formatDuration = (secs: number) => {
+    const h = Math.floor(secs / 3600);
+    const m = Math.floor((secs % 3600) / 60);
+    return h > 0 ? `${h} сағ ${m} мин` : `${m} мин`;
+  };
+
+  const formatDistance = (meters: number) => {
+    return meters >= 1000 ? `${(meters / 1000).toFixed(1)} км` : `${meters} м`;
+  };
+
   const totalCO2 =
     routesData?.routes?.reduce(
       (s: number, r: any) => s + (r.co2_saved_g || 0),
@@ -293,7 +488,205 @@ export default function MapPage() {
               );
             })}
           </div>
+
+          {/* Plan Route toggle */}
+          <button
+            onClick={togglePlanner}
+            style={{
+              marginTop: 12,
+              width: '100%',
+              padding: '12px 20px',
+              borderRadius: 16,
+              fontSize: 14,
+              fontWeight: 700,
+              cursor: 'pointer',
+              transition: 'all 0.25s',
+              border: 'none',
+              background: plannerOpen
+                ? 'linear-gradient(135deg, #16A34A, #15803D)'
+                : 'linear-gradient(135deg, #22C55E, #16A34A)',
+              color: '#FFFFFF',
+              boxShadow: '0 4px 16px rgba(34, 197, 94, 0.35)',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              gap: 8,
+            }}
+          >
+            {plannerOpen ? '✕ Жоспарлауды жабу' : '🗺️ Маршрут жоспарлау'}
+          </button>
         </div>
+
+        {/* ── ROUTE PLANNER PANEL ── */}
+        {plannerOpen && (
+          <div
+            style={{
+              padding: '16px',
+              borderBottom: '2px solid #DCFCE7',
+              background: 'linear-gradient(135deg, #ECFDF5, #F0FDF4)',
+            }}
+          >
+            {/* Mode selector */}
+            <div className="flex gap-2 mb-4">
+              {[
+                { key: 'walking', label: 'Жаяу', icon: '🚶' },
+                { key: 'cycling', label: 'Велосипед', icon: '🚴' },
+              ].map((m) => (
+                <button
+                  key={m.key}
+                  onClick={() => handleModeChange(m.key as 'walking' | 'cycling')}
+                  style={{
+                    flex: 1,
+                    padding: '10px',
+                    borderRadius: 14,
+                    fontSize: 13,
+                    fontWeight: 700,
+                    cursor: 'pointer',
+                    transition: 'all 0.2s',
+                    border: navMode === m.key ? 'none' : '2px solid #BBF7D0',
+                    background: navMode === m.key
+                      ? (m.key === 'cycling' ? 'linear-gradient(135deg, #FBBF24, #F59E0B)' : 'linear-gradient(135deg, #38BDF8, #0EA5E9)')
+                      : '#FFFFFF',
+                    color: navMode === m.key ? '#FFFFFF' : '#16A34A',
+                    boxShadow: navMode === m.key ? '0 4px 12px rgba(0,0,0,0.15)' : 'none',
+                  }}
+                >
+                  {m.icon} {m.label}
+                </button>
+              ))}
+            </div>
+
+            {/* Start point row */}
+            <div
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                gap: 8,
+                marginBottom: 8,
+                padding: '10px 14px',
+                borderRadius: 12,
+                background: planStep === 'from' && !fromPoint ? 'rgba(34,197,94,0.08)' : '#FFFFFF',
+                border: planStep === 'from' && !fromPoint ? '2px solid #22C55E' : '2px solid #E5E7EB',
+              }}
+            >
+              <span style={{ fontSize: 20 }}>🟢</span>
+              <span style={{ flex: 1, fontSize: 13, color: fromPoint ? '#14532D' : '#9CA3AF', fontWeight: fromPoint ? 600 : 400 }}>
+                {fromPoint ? `${fromPoint[1].toFixed(5)}, ${fromPoint[0].toFixed(5)}` : 'Картаны басып бастапқы нүкте таңдаңыз'}
+              </span>
+              <button
+                onClick={getUserLocation}
+                disabled={geoLoading}
+                title="Менің орналасуымды пайдалану"
+                style={{
+                  padding: '6px 10px',
+                  borderRadius: 8,
+                  fontSize: 12,
+                  fontWeight: 700,
+                  cursor: geoLoading ? 'default' : 'pointer',
+                  border: 'none',
+                  background: 'linear-gradient(135deg, #22C55E, #16A34A)',
+                  color: '#FFFFFF',
+                  opacity: geoLoading ? 0.7 : 1,
+                  whiteSpace: 'nowrap',
+                }}
+              >
+                {geoLoading ? '⏳' : '📍 Менің орным'}
+              </button>
+            </div>
+
+            {/* End point row */}
+            <div
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                gap: 8,
+                marginBottom: 12,
+                padding: '10px 14px',
+                borderRadius: 12,
+                background: planStep === 'to' && !toPoint ? 'rgba(239,68,68,0.06)' : '#FFFFFF',
+                border: planStep === 'to' && !toPoint ? '2px solid #EF4444' : '2px solid #E5E7EB',
+              }}
+            >
+              <span style={{ fontSize: 20 }}>🔴</span>
+              <span style={{ flex: 1, fontSize: 13, color: toPoint ? '#14532D' : '#9CA3AF', fontWeight: toPoint ? 600 : 400 }}>
+                {toPoint ? `${toPoint[1].toFixed(5)}, ${toPoint[0].toFixed(5)}` : 'Картаны басып соңғы нүкте таңдаңыз'}
+              </span>
+              {toPoint && (
+                <button
+                  onClick={() => { setToPoint(null); setPlanStep('to'); setNavRoute(null); setNavStats(null); }}
+                  style={{ background: 'none', border: 'none', cursor: 'pointer', color: '#9CA3AF', fontSize: 16 }}
+                >✕</button>
+              )}
+            </div>
+
+            {/* Build route button */}
+            <button
+              onClick={handleNavigate}
+              disabled={!fromPoint || !toPoint || isNavigating}
+              style={{
+                width: '100%',
+                padding: '13px',
+                borderRadius: 14,
+                fontSize: 14,
+                fontWeight: 800,
+                cursor: (!fromPoint || !toPoint || isNavigating) ? 'default' : 'pointer',
+                border: 'none',
+                background: (!fromPoint || !toPoint || isNavigating)
+                  ? '#E5E7EB'
+                  : 'linear-gradient(135deg, #22C55E, #16A34A)',
+                color: (!fromPoint || !toPoint || isNavigating) ? '#9CA3AF' : '#FFFFFF',
+                boxShadow: (!fromPoint || !toPoint || isNavigating) ? 'none' : '0 4px 16px rgba(34,197,94,0.35)',
+                transition: 'all 0.2s',
+              }}
+            >
+              {isNavigating ? '⏳ Маршрут есептелуде...' : '🗺️ Маршрутты есептеу'}
+            </button>
+
+            {/* Error */}
+            {navError && (
+              <div style={{ marginTop: 10, padding: '10px 14px', borderRadius: 10, background: '#FEE2E2', color: '#DC2626', fontSize: 13, fontWeight: 600 }}>
+                ⚠️ {navError}
+              </div>
+            )}
+
+            {/* Route stats */}
+            {navStats && (
+              <div
+                style={{
+                  marginTop: 12,
+                  padding: '14px',
+                  borderRadius: 14,
+                  background: 'linear-gradient(135deg, #DCFCE7, #ECFDF5)',
+                  border: '2px solid #86EFAC',
+                }}
+              >
+                <div style={{ fontWeight: 700, fontSize: 13, color: '#14532D', marginBottom: 10 }}>
+                  ✅ Маршрут табылды
+                </div>
+                <div className="flex gap-3">
+                  {[
+                    ['📏', formatDistance(navStats.distance_m), 'Қашықтық'],
+                    ['⏱', formatDuration(navStats.duration_s), 'Уақыт'],
+                    ['🌿', `${((navStats.distance_m / 1000) * CO2_G_PER_KM / 1000).toFixed(2)} kg`, 'CO₂ үнемі'],
+                  ].map(([icon, val, label]) => (
+                    <div key={String(label)} style={{ flex: 1, textAlign: 'center', padding: '10px 4px', background: '#FFFFFF', borderRadius: 10, border: '1px solid #BBF7D0' }}>
+                      <div style={{ fontSize: 18 }}>{icon}</div>
+                      <div style={{ fontWeight: 800, fontSize: 14, color: '#14532D' }}>{val}</div>
+                      <div style={{ fontSize: 10, color: '#6B7280', fontWeight: 600 }}>{label}</div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {/* Hint */}
+            {!navStats && !navError && (
+              <p style={{ marginTop: 10, fontSize: 11, color: '#9CA3AF', textAlign: 'center' }}>
+                {planStep === 'from' ? '👆 Картаны басып бастапқы нүкте таңдаңыз' : '👆 Картаны басып соңғы нүкте таңдаңыз'}
+              </p>
+            )}
+          </div>
+        )}
 
         {/* Routes List */}
         <div style={{ flex: 1, overflowY: 'auto', padding: '16px' }}>

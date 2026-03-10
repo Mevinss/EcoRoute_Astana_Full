@@ -39,12 +39,4 @@ build/
 out/
 .vite/
 .cache/
-
-# editor / system
-.vscode/
-.idea/
-.DS_Store
-Thumbs.db
-node_modules/
-frontend/node_modules/
-.env
+*.tsbuildinfo
