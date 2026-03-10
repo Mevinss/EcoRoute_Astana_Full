@@ -2,6 +2,8 @@
 
 Астананың экологиялық туризм платформасы — eco маршруттар, брондау, eco-bonus жүйесі.
 
+> **📖 Толық нұсқаулық:** [SETUP.md](./SETUP.md) — іске қосу, қателер, деректер базасы
+
 ---
 
 ## 🚀 Жобаны іске қосу (Docker арқылы)
@@ -13,8 +15,8 @@
 ### Іске қосу қадамдары:
 
 ```bash
-# 1. Папканы ашыңыз
-cd ecoroute-final
+# 1. Жоба папкасына кіріңіз (docker-compose.yml бар жерде)
+cd EcoRoute_Astana_Full
 
 # 2. Docker Compose арқылы барлық сервистерді іске қосу
 docker compose up --build
@@ -23,10 +25,19 @@ docker compose up --build
 docker compose up -d --build
 ```
 
+> ⚠️ **Маңызды:** `docker compose up` командасын `docker-compose.yml` файлы
+> бар папкадан іске қосыңыз!
+
 ### Браузерде ашу:
 - **Frontend (сайт):** http://localhost:3000
 - **Backend (API):** http://localhost:4000
 - **Карта беті:** http://localhost:3000/map
+
+### Тест тіркелгілері:
+| Email | Пароль | Рөл |
+|-------|--------|-----|
+| `test@ecoroute.kz` | `Test1234!` | Пайдаланушы |
+| `admin@ecoroute.kz` | `Test1234!` | Администратор |
 
 ### Тоқтату:
 ```bash

@@ -1,11 +1,14 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  // Proxy API requests to backend (works in Codespaces)
+  // Proxy API requests to backend.
+  // In Docker: BACKEND_URL=http://backend:4000 (service name)
+  // Locally:   BACKEND_URL=http://localhost:4000 (default)
   async rewrites() {
+    const backendUrl = process.env.BACKEND_URL || 'http://localhost:4000';
     return [
       {
         source: '/api/:path*',
-        destination: 'http://backend:4000/api/:path*',
+        destination: `${backendUrl}/api/:path*`,
       },
     ];
   },

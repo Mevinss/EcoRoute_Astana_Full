@@ -62,6 +62,9 @@ services:
       - backend
     env_file:
       - ./frontend/.env.local
+    environment:
+      # Point Next.js API proxy to backend Docker service
+      BACKEND_URL: http://backend:4000
     ports:
       - "${FRONTEND_PORT:-3000}:3000"
     volumes:
