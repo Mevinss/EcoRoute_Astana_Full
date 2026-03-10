@@ -1,0 +1,93 @@
+{
+  "name": "EcoRoute Astana Dev",
+  "build": {
+    "dockerfile": "Dockerfile",
+    "context": ".."
+  },
+
+  // VS Code кеңейтімдері
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        // TypeScript & JavaScript
+        "ms-vscode.vscode-typescript-next",
+        "dsznajder.es7-react-js-snippets",
+        "bradlc.vscode-tailwindcss",
+        
+        // Python (geo-скрипттер үшін)
+        "ms-python.python",
+        "ms-python.vscode-pylance",
+        
+        // Database
+        "mtxr.sqltools",
+        "mtxr.sqltools-driver-pg",
+        "ckolkman.vscode-postgres",
+        
+        // Git & Editor
+        "eamodio.gitlens",
+        "esbenp.prettier-vscode",
+        "dbaeumer.vscode-eslint",
+        "streetsidesoftware.code-spell-checker",
+        
+        // Docker & REST
+        "ms-azuretools.vscode-docker",
+        "humao.rest-client",
+        
+        // Map development
+        "mapbox.vscode-mapbox"
+      ],
+      "settings": {
+        "editor.formatOnSave": true,
+        "editor.tabSize": 2,
+        "typescript.preferences.importModuleSpecifier": "relative",
+        "tailwindCSS.experimental.classRegex": [
+          ["clsx\\(([^)]*)\\)", "(?:'|\"|`)([^']*)(?:'|\"|`)"]
+        ],
+        "terminal.integrated.defaultProfile.linux": "bash"
+      }
+    }
+  },
+
+  // Порттар автоматты түрде ашылады
+  "forwardPorts": [3000, 4000, 5432, 6379],
+  "portsAttributes": {
+    "3000": {
+      "label": "Frontend (Next.js)",
+      "onAutoForward": "openBrowser"
+    },
+    "4000": {
+      "label": "Backend API",
+      "onAutoForward": "notify"
+    },
+    "5432": {
+      "label": "PostgreSQL",
+      "onAutoForward": "silent"
+    },
+    "6379": {
+      "label": "Redis",
+      "onAutoForward": "silent"
+    }
+  },
+
+  // Кодеспейс іске қосылғаннан кейін командалар
+  "postCreateCommand": "cd ecoroute-astana && npm install --prefix backend && npm install --prefix frontend && cd backend && npm run migrate 2>/dev/null || true",
+
+  // Docker Compose қолдау
+  "features": {
+    "ghcr.io/devcontainers/features/docker-in-docker:2": {},
+    "ghcr.io/devcontainers/features/github-cli:1": {}
+  },
+
+  // Орта айнымалылары
+  "remoteEnv": {
+    "NODE_ENV": "development",
+    "POSTGRES_HOST": "localhost",
+    "POSTGRES_PORT": "5432",
+    "POSTGRES_USER": "ecoroute",
+    "POSTGRES_PASSWORD": "ecoroute_secret_2025",
+    "POSTGRES_DB": "ecoroute_db"
+  },
+
+  // Жұмыс директориясы
+  "workspaceFolder": "/workspaces/ecoroute-astana"
+}

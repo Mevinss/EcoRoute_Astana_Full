@@ -1,0 +1,1534 @@
+<!DOCTYPE html>
+<html lang="kk">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>EcoRoute Astana — Қазақстанның жасыл туризм платформасы</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;1,400&display=swap" rel="stylesheet">
+<style>
+:root {
+  --green:    #16a34a;
+  --green-l:  #22c55e;
+  --green-xl: #4ade80;
+  --green-bg: #dcfce7;
+  --green-sm: #f0fdf4;
+  --teal:     #0d9488;
+  --blue:     #2563eb;
+  --navy:     #0f172a;
+  --slate:    #475569;
+  --muted:    #94a3b8;
+  --border:   #e2e8f0;
+  --white:    #ffffff;
+  --cream:    #fafffe;
+  --card-shadow: 0 4px 24px rgba(15,23,42,.07);
+  --green-shadow: 0 8px 32px rgba(34,197,94,.28);
+  --r-xl: 28px;
+  --r-lg: 20px;
+  --r-md: 14px;
+}
+
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  font-family:'DM Sans',sans-serif;
+  background:var(--cream);
+  color:var(--navy);
+  overflow-x:hidden;
+  -webkit-font-smoothing:antialiased;
+}
+
+/* ── SCROLLBAR ─────────────────────────────────────── */
+::-webkit-scrollbar{width:6px}
+::-webkit-scrollbar-track{background:var(--green-sm)}
+::-webkit-scrollbar-thumb{background:var(--green-l);border-radius:3px}
+
+/* ── KEYFRAMES ─────────────────────────────────────── */
+@keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-14px)}}
+@keyframes fadeUp{from{opacity:0;transform:translateY(32px)}to{opacity:1;transform:translateY(0)}}
+@keyframes popIn{from{opacity:0;transform:scale(.88)}to{opacity:1;transform:scale(1)}}
+@keyframes pulseRing{0%,100%{box-shadow:0 0 0 0 rgba(34,197,94,.45)}50%{box-shadow:0 0 0 12px rgba(34,197,94,0)}}
+@keyframes gradientShift{0%{background-position:0% 50%}50%{background-position:100% 50%}100%{background-position:0% 50%}}
+@keyframes ticker{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+@keyframes shimmer{0%{opacity:.5}50%{opacity:1}100%{opacity:.5}}
+@keyframes spin{to{transform:rotate(360deg)}}
+@keyframes bounceIn{0%{transform:scale(0) translateY(8px);opacity:0}60%{transform:scale(1.08) translateY(-4px)}100%{transform:scale(1) translateY(0);opacity:1}}
+@keyframes slideLeft{from{transform:translateX(40px);opacity:0}to{transform:translateX(0);opacity:1}}
+
+.ani-fadeUp{animation:fadeUp .7s cubic-bezier(.4,0,.2,1) both}
+.ani-pop{animation:popIn .6s cubic-bezier(.4,0,.2,1) both}
+.ani-float{animation:float 3.5s ease-in-out infinite}
+.d1{animation-delay:.1s}.d2{animation-delay:.2s}.d3{animation-delay:.3s}.d4{animation-delay:.4s}.d5{animation-delay:.5s}
+
+/* ── NAV ───────────────────────────────────────────── */
+.nav{
+  position:fixed;top:0;left:0;right:0;z-index:1000;
+  transition:all .4s cubic-bezier(.4,0,.2,1);
+}
+.nav.scrolled{
+  background:rgba(255,255,255,.92);
+  backdrop-filter:blur(24px) saturate(180%);
+  -webkit-backdrop-filter:blur(24px);
+  border-bottom:1px solid rgba(34,197,94,.15);
+  box-shadow:0 2px 24px rgba(15,23,42,.06);
+}
+.nav-inner{
+  max-width:1360px;margin:0 auto;
+  padding:18px 28px;
+  display:flex;align-items:center;justify-content:space-between;
+  gap:20px;
+}
+.logo{
+  display:flex;align-items:center;gap:12px;
+  text-decoration:none;flex-shrink:0;
+}
+.logo-icon{
+  width:46px;height:46px;border-radius:15px;
+  background:linear-gradient(135deg,var(--green-l),var(--green));
+  display:flex;align-items:center;justify-content:center;
+  font-size:22px;
+  box-shadow:0 6px 20px rgba(34,197,94,.35);
+  transform:rotate(-4deg);
+  transition:transform .3s;
+}
+.logo:hover .logo-icon{transform:rotate(0deg) scale(1.08)}
+.logo-text{
+  font-family:'Outfit',sans-serif;
+  font-size:22px;font-weight:800;color:var(--navy);
+  letter-spacing:-.4px;
+}
+.logo-text span{
+  background:linear-gradient(135deg,var(--green-l),var(--teal));
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;
+}
+.nav-links{display:flex;align-items:center;gap:4px}
+.nav-link{
+  padding:9px 18px;border-radius:12px;
+  color:var(--slate);font-weight:500;font-size:15px;
+  text-decoration:none;
+  transition:all .2s;
+}
+.nav-link:hover{color:var(--green);background:rgba(34,197,94,.08)}
+.nav-link.active{color:var(--green);background:var(--green-bg);font-weight:600}
+.nav-actions{display:flex;align-items:center;gap:10px}
+.btn-ghost{
+  padding:10px 22px;border-radius:12px;
+  color:var(--green);font-weight:600;font-size:14px;
+  background:rgba(34,197,94,.1);
+  text-decoration:none;transition:all .2s;
+}
+.btn-ghost:hover{background:rgba(34,197,94,.18)}
+.btn-solid{
+  padding:10px 22px;border-radius:12px;
+  color:#fff;font-weight:700;font-size:14px;
+  background:linear-gradient(135deg,var(--green-l),var(--green));
+  text-decoration:none;
+  box-shadow:0 4px 14px rgba(34,197,94,.38);
+  transition:all .25s;
+}
+.btn-solid:hover{transform:translateY(-1px);box-shadow:0 6px 20px rgba(34,197,94,.45)}
+
+/* ── TICKER ────────────────────────────────────────── */
+.ticker-wrap{
+  background:linear-gradient(90deg,var(--green),var(--teal));
+  padding:10px 0;overflow:hidden;
+  position:relative;z-index:999;margin-top:82px;
+}
+.ticker-inner{
+  display:flex;white-space:nowrap;
+  animation:ticker 30s linear infinite;
+}
+.ticker-item{
+  padding:0 40px;font-size:13px;
+  font-weight:600;color:#fff;letter-spacing:.03em;
+  display:flex;align-items:center;gap:8px;
+}
+
+/* ── HERO ──────────────────────────────────────────── */
+.hero{
+  min-height:100vh;
+  display:flex;align-items:center;
+  position:relative;overflow:hidden;
+  padding-top:0;
+}
+.hero-bg{
+  position:absolute;inset:0;
+  background:
+    radial-gradient(ellipse 80% 60% at 15% 25%, rgba(34,197,94,.12) 0,transparent 60%),
+    radial-gradient(ellipse 60% 50% at 80% 15%, rgba(13,148,136,.08) 0,transparent 55%),
+    radial-gradient(ellipse 70% 60% at 50% 90%, rgba(37,99,235,.06) 0,transparent 55%),
+    var(--cream);
+  z-index:0;
+}
+/* Decorative blobs */
+.blob{
+  position:absolute;border-radius:50%;
+  filter:blur(60px);opacity:.4;pointer-events:none;z-index:0;
+}
+.blob-1{width:400px;height:400px;background:radial-gradient(circle,rgba(34,197,94,.3),transparent 70%);top:-100px;left:-80px}
+.blob-2{width:500px;height:500px;background:radial-gradient(circle,rgba(13,148,136,.2),transparent 70%);top:100px;right:-150px}
+.blob-3{width:300px;height:300px;background:radial-gradient(circle,rgba(37,99,235,.15),transparent 70%);bottom:0;left:30%}
+
+.hero-inner{
+  max-width:1360px;margin:0 auto;padding:100px 28px 80px;
+  display:grid;grid-template-columns:1fr 1fr;
+  gap:80px;align-items:center;
+  position:relative;z-index:2;
+}
+.hero-badge{
+  display:inline-flex;align-items:center;gap:8px;
+  padding:7px 16px;border-radius:100px;
+  background:rgba(34,197,94,.12);
+  border:1px solid rgba(34,197,94,.25);
+  font-size:13px;font-weight:600;color:var(--green);
+  margin-bottom:24px;
+  animation:pulseRing 3s ease infinite;
+}
+.hero-h1{
+  font-family:'Outfit',sans-serif;
+  font-size:clamp(42px,5vw,68px);
+  font-weight:900;
+  line-height:1.06;
+  letter-spacing:-.03em;
+  color:var(--navy);
+  margin-bottom:24px;
+}
+.hero-h1 .grad{
+  background:linear-gradient(135deg,var(--green-l) 0%,var(--teal) 50%,#6366f1 100%);
+  background-size:200% 200%;
+  animation:gradientShift 4s ease infinite;
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;
+}
+.hero-p{
+  font-size:18px;line-height:1.7;
+  color:var(--slate);margin-bottom:40px;max-width:520px;
+}
+.hero-btns{display:flex;gap:16px;flex-wrap:wrap}
+.btn-hero-1{
+  display:inline-flex;align-items:center;gap:10px;
+  padding:17px 32px;font-size:16px;font-weight:700;
+  color:#fff;
+  background:linear-gradient(135deg,var(--green-l),var(--green));
+  border:none;border-radius:18px;text-decoration:none;cursor:pointer;
+  box-shadow:0 10px 36px rgba(34,197,94,.42),inset 0 1px 0 rgba(255,255,255,.25);
+  transition:all .3s cubic-bezier(.4,0,.2,1);
+}
+.btn-hero-1:hover{transform:translateY(-3px);box-shadow:0 16px 44px rgba(34,197,94,.5)}
+.btn-hero-2{
+  display:inline-flex;align-items:center;gap:10px;
+  padding:17px 32px;font-size:16px;font-weight:700;
+  color:var(--navy);
+  background:rgba(255,255,255,.95);
+  backdrop-filter:blur(12px);
+  border:2px solid rgba(34,197,94,.3);
+  border-radius:18px;text-decoration:none;cursor:pointer;
+  transition:all .3s;
+}
+.btn-hero-2:hover{border-color:var(--green-l);box-shadow:0 8px 28px rgba(34,197,94,.18)}
+.hero-trust{
+  display:flex;align-items:center;gap:20px;
+  margin-top:32px;
+}
+.hero-trust-item{
+  display:flex;align-items:center;gap:6px;
+  font-size:13px;color:var(--muted);font-weight:500;
+}
+.hero-trust-dot{
+  width:6px;height:6px;border-radius:50%;
+  background:var(--green-l);
+}
+
+/* ── HERO VISUAL ───────────────────────────────────── */
+.hero-visual{position:relative;height:600px}
+.hv-card{
+  position:absolute;
+  background:rgba(255,255,255,.95);
+  backdrop-filter:blur(24px);
+  -webkit-backdrop-filter:blur(24px);
+  border-radius:var(--r-xl);
+  box-shadow:0 20px 60px rgba(15,23,42,.1),0 0 0 1px rgba(255,255,255,.8) inset;
+  overflow:hidden;
+}
+.hv-main{
+  width:360px;height:400px;
+  top:60px;left:40px;
+  transform:rotate(-2.5deg);
+  transition:transform .5s;
+}
+.hv-main:hover{transform:rotate(0deg) translateY(-4px)}
+.hv-map-area{
+  width:100%;height:230px;
+  background:linear-gradient(160deg,#bbf7d0,#dcfce7 40%,#a7f3d0);
+  display:flex;align-items:center;justify-content:center;
+  position:relative;overflow:hidden;
+}
+.hv-map-grid{
+  position:absolute;inset:0;
+  background-image:
+    linear-gradient(rgba(34,197,94,.1) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(34,197,94,.1) 1px,transparent 1px);
+  background-size:30px 30px;
+}
+.hv-map-emoji{font-size:70px;position:relative;z-index:1}
+.hv-map-chip{
+  position:absolute;
+  background:rgba(255,255,255,.96);
+  border-radius:12px;
+  padding:7px 14px;
+  font-size:13px;font-weight:700;
+  box-shadow:0 4px 14px rgba(0,0,0,.1);
+  display:flex;align-items:center;gap:6px;
+}
+.hv-map-chip.tl{top:18px;left:18px;color:var(--green)}
+.hv-map-chip.br{bottom:18px;right:18px;color:var(--blue)}
+.hv-card-body{padding:20px 22px}
+.hv-card-title{font-family:'Outfit',sans-serif;font-weight:800;font-size:17px;color:var(--navy);margin-bottom:14px}
+.hv-btn{
+  display:inline-flex;align-items:center;gap:6px;
+  padding:10px 22px;border-radius:12px;
+  background:linear-gradient(135deg,var(--green-l),var(--green));
+  color:#fff;font-weight:700;font-size:13px;
+  text-decoration:none;box-shadow:0 4px 14px rgba(34,197,94,.35);
+}
+.hv-bonus{
+  width:210px;
+  top:10px;right:10px;
+  padding:20px;
+  transform:rotate(4deg);
+  transition:transform .4s;
+}
+.hv-bonus:hover{transform:rotate(0deg)}
+.hv-bonus-icon{
+  width:46px;height:46px;border-radius:14px;
+  background:linear-gradient(135deg,var(--green-l),var(--green));
+  display:flex;align-items:center;justify-content:center;
+  font-size:22px;margin-bottom:12px;
+  box-shadow:0 6px 18px rgba(34,197,94,.35);
+}
+.hv-bonus-label{font-size:11px;color:var(--muted);font-weight:600;letter-spacing:.05em;text-transform:uppercase}
+.hv-bonus-val{font-family:'Outfit',sans-serif;font-size:28px;font-weight:900;color:var(--green);line-height:1}
+.hv-bonus-sub{font-size:12px;color:var(--slate);margin-top:6px}
+.hv-route{
+  width:260px;
+  bottom:60px;right:50px;
+  padding:18px 20px;
+  transform:rotate(-1.5deg);
+  transition:transform .4s;
+}
+.hv-route:hover{transform:rotate(0deg)}
+.hv-route-row{display:flex;gap:14px;align-items:center}
+.hv-route-img{
+  width:58px;height:58px;border-radius:14px;flex-shrink:0;
+  background:linear-gradient(135deg,#3b82f6,#1d4ed8);
+  display:flex;align-items:center;justify-content:center;font-size:28px;
+}
+.hv-route-name{font-weight:700;font-size:15px;color:var(--navy)}
+.hv-route-meta{display:flex;align-items:center;gap:5px;margin-top:4px;font-size:13px}
+.hv-air{
+  width:180px;
+  bottom:0;left:20px;
+  padding:18px;
+  transform:rotate(2deg);
+  transition:transform .4s;
+}
+.hv-air:hover{transform:rotate(0deg)}
+.hv-air-label{font-size:11px;color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:.05em;margin-bottom:8px}
+.hv-air-val{
+  font-family:'Outfit',sans-serif;
+  font-size:32px;font-weight:900;color:var(--green);
+}
+.hv-air-status{
+  display:inline-flex;align-items:center;gap:5px;
+  font-size:12px;font-weight:700;color:var(--green);
+  background:var(--green-bg);padding:4px 10px;border-radius:8px;margin-top:8px;
+}
+
+/* ── STATS BAND ────────────────────────────────────── */
+.stats-section{
+  padding:80px 28px;
+  position:relative;
+}
+.stats-inner{
+  max-width:1200px;margin:0 auto;
+  display:grid;grid-template-columns:repeat(4,1fr);gap:24px;
+}
+.stat-card{
+  background:#fff;
+  border-radius:var(--r-xl);
+  padding:36px 28px;
+  text-align:center;
+  border:1.5px solid var(--border);
+  box-shadow:var(--card-shadow);
+  transition:all .35s cubic-bezier(.4,0,.2,1);
+  position:relative;overflow:hidden;
+}
+.stat-card::before{
+  content:'';position:absolute;inset:0;
+  background:linear-gradient(135deg,rgba(34,197,94,.04),transparent);
+  opacity:0;transition:opacity .3s;
+}
+.stat-card:hover{transform:translateY(-6px);box-shadow:0 16px 48px rgba(34,197,94,.15);border-color:rgba(34,197,94,.3)}
+.stat-card:hover::before{opacity:1}
+.stat-icon{font-size:36px;margin-bottom:14px}
+.stat-val{
+  font-family:'Outfit',sans-serif;
+  font-size:42px;font-weight:900;
+  letter-spacing:-.04em;
+  line-height:1;margin-bottom:8px;
+}
+.stat-lbl{font-size:15px;font-weight:500;color:var(--slate)}
+
+/* ── SECTION COMMON ────────────────────────────────── */
+.section-label{
+  display:inline-flex;align-items:center;gap:7px;
+  padding:6px 16px;border-radius:100px;
+  background:rgba(34,197,94,.1);
+  border:1px solid rgba(34,197,94,.2);
+  font-size:12px;font-weight:700;
+  color:var(--green);letter-spacing:.06em;text-transform:uppercase;
+  margin-bottom:16px;
+}
+.section-h2{
+  font-family:'Outfit',sans-serif;
+  font-size:clamp(28px,4vw,44px);
+  font-weight:900;letter-spacing:-.03em;
+  color:var(--navy);margin-bottom:14px;
+}
+.section-p{font-size:17px;line-height:1.7;color:var(--slate);max-width:580px}
+
+/* ── FEATURES ──────────────────────────────────────── */
+.features{
+  padding:100px 28px;
+  background:linear-gradient(180deg,rgba(240,253,244,.6) 0%,transparent 100%);
+}
+.features-head{text-align:center;margin-bottom:64px}
+.features-head .section-p{margin:0 auto}
+.features-grid{
+  max-width:1300px;margin:0 auto;
+  display:grid;grid-template-columns:repeat(4,1fr);gap:24px;
+}
+.feature-card{
+  background:#fff;border-radius:var(--r-xl);
+  padding:36px 28px;
+  border:1.5px solid var(--border);
+  box-shadow:var(--card-shadow);
+  transition:all .4s cubic-bezier(.4,0,.2,1);
+  cursor:pointer;
+}
+.feature-card:hover{
+  transform:translateY(-10px);
+  box-shadow:0 24px 60px rgba(34,197,94,.18);
+  border-color:rgba(34,197,94,.35);
+}
+.feature-icon-wrap{
+  width:72px;height:72px;border-radius:22px;
+  display:flex;align-items:center;justify-content:center;
+  font-size:34px;margin-bottom:22px;
+  box-shadow:0 8px 24px rgba(0,0,0,.14);
+  transition:transform .35s;
+}
+.feature-card:hover .feature-icon-wrap{transform:scale(1.12) rotate(6deg)}
+.feature-h3{
+  font-family:'Outfit',sans-serif;
+  font-size:19px;font-weight:800;
+  color:var(--navy);margin-bottom:10px;
+}
+.feature-p{font-size:14px;color:var(--slate);line-height:1.65}
+.feature-arrow{
+  display:inline-flex;align-items:center;gap:5px;
+  margin-top:16px;font-size:13px;font-weight:700;
+  color:var(--green);opacity:0;
+  transform:translateX(-6px);
+  transition:all .3s;
+}
+.feature-card:hover .feature-arrow{opacity:1;transform:translateX(0)}
+
+/* ── HOW IT WORKS ──────────────────────────────────── */
+.how{padding:100px 28px;background:#fff}
+.how-inner{
+  max-width:1100px;margin:0 auto;
+  display:grid;grid-template-columns:1fr 1fr;gap:80px;align-items:center;
+}
+.how-steps{display:flex;flex-direction:column;gap:28px}
+.how-step{
+  display:flex;gap:20px;align-items:flex-start;
+  padding:24px;border-radius:var(--r-lg);
+  transition:all .3s;cursor:default;
+}
+.how-step:hover{background:var(--green-sm);transform:translateX(6px)}
+.how-step-num{
+  width:44px;height:44px;flex-shrink:0;
+  border-radius:14px;
+  background:linear-gradient(135deg,var(--green-l),var(--green));
+  display:flex;align-items:center;justify-content:center;
+  font-family:'Outfit',sans-serif;
+  font-size:18px;font-weight:900;color:#fff;
+  box-shadow:0 6px 18px rgba(34,197,94,.35);
+}
+.how-step-content h4{
+  font-family:'Outfit',sans-serif;
+  font-size:17px;font-weight:800;color:var(--navy);
+  margin-bottom:6px;
+}
+.how-step-content p{font-size:14px;color:var(--slate);line-height:1.65}
+.how-visual{
+  background:linear-gradient(135deg,var(--green-bg),#ecfdf5);
+  border-radius:32px;
+  padding:48px 40px;
+  text-align:center;
+  border:2px solid rgba(34,197,94,.2);
+  position:relative;overflow:hidden;
+}
+.how-visual::before{
+  content:'';
+  position:absolute;inset:0;
+  background-image:
+    radial-gradient(circle at 25% 25%,rgba(34,197,94,.15) 0,transparent 50%),
+    radial-gradient(circle at 75% 75%,rgba(13,148,136,.1) 0,transparent 50%);
+}
+.how-phone{font-size:120px;position:relative;z-index:1}
+.how-phone-stats{
+  display:flex;gap:16px;justify-content:center;
+  margin-top:28px;position:relative;z-index:1;
+}
+.how-phone-stat{
+  background:rgba(255,255,255,.95);
+  border-radius:16px;padding:16px 20px;text-align:center;
+  flex:1;
+  box-shadow:0 6px 20px rgba(34,197,94,.15);
+}
+.how-phone-stat-val{
+  font-family:'Outfit',sans-serif;
+  font-size:24px;font-weight:900;color:var(--green);
+}
+.how-phone-stat-lbl{font-size:12px;color:var(--slate);margin-top:3px}
+
+/* ── ECO BONUS ─────────────────────────────────────── */
+.eco{
+  padding:100px 28px;
+  background:linear-gradient(135deg,#dcfce7 0%,#f0fdf9 50%,#ecfdf5 100%);
+}
+.eco-inner{max-width:1200px;margin:0 auto}
+.eco-head{text-align:center;margin-bottom:64px}
+.eco-grid{
+  display:grid;grid-template-columns:repeat(4,1fr);gap:20px;
+  margin-bottom:56px;
+}
+.eco-card{
+  background:#fff;border-radius:var(--r-xl);padding:32px 24px;
+  text-align:center;
+  border:2px solid rgba(34,197,94,.15);
+  box-shadow:0 4px 20px rgba(34,197,94,.08);
+  transition:all .35s;position:relative;overflow:hidden;
+}
+.eco-card::after{
+  content:'';
+  position:absolute;bottom:0;left:0;right:0;height:3px;
+  background:linear-gradient(90deg,var(--green-l),var(--teal));
+  transform:scaleX(0);transform-origin:left;
+  transition:transform .3s;
+}
+.eco-card:hover{transform:translateY(-8px);box-shadow:0 20px 50px rgba(34,197,94,.18)}
+.eco-card:hover::after{transform:scaleX(1)}
+.eco-card-icon{
+  width:68px;height:68px;border-radius:20px;
+  display:flex;align-items:center;justify-content:center;
+  font-size:32px;margin:0 auto 18px;
+  background:linear-gradient(135deg,var(--green-bg),#bbf7d0);
+  box-shadow:0 6px 20px rgba(34,197,94,.2);
+  transition:transform .35s;
+}
+.eco-card:hover .eco-card-icon{transform:scale(1.12) rotate(8deg)}
+.eco-card-title{
+  font-family:'Outfit',sans-serif;
+  font-size:17px;font-weight:800;color:var(--navy);margin-bottom:8px;
+}
+.eco-card-bonus{
+  display:inline-block;
+  padding:7px 18px;border-radius:100px;
+  background:linear-gradient(135deg,var(--green-l),var(--green));
+  color:#fff;font-size:15px;font-weight:800;
+  margin-bottom:8px;
+  box-shadow:0 4px 14px rgba(34,197,94,.35);
+}
+.eco-card-desc{font-size:13px;color:var(--muted)}
+.eco-cta{text-align:center}
+
+/* ── ROUTES ────────────────────────────────────────── */
+.routes{padding:100px 28px}
+.routes-inner{max-width:1300px;margin:0 auto}
+.routes-head{
+  display:flex;align-items:flex-end;justify-content:space-between;
+  margin-bottom:48px;
+}
+.routes-grid{
+  display:grid;grid-template-columns:repeat(3,1fr);gap:28px;
+}
+.route-card{
+  border-radius:var(--r-xl);overflow:hidden;
+  background:#fff;
+  box-shadow:var(--card-shadow);
+  border:1.5px solid var(--border);
+  text-decoration:none;
+  transition:all .4s cubic-bezier(.4,0,.2,1);
+  display:block;
+}
+.route-card:hover{
+  transform:translateY(-12px);
+  box-shadow:0 28px 64px rgba(15,23,42,.14);
+}
+.route-img{
+  height:210px;
+  display:flex;align-items:center;justify-content:center;
+  font-size:80px;
+  position:relative;overflow:hidden;
+}
+.route-img-emoji{transition:transform .4s}
+.route-card:hover .route-img-emoji{transform:scale(1.2)}
+.route-badge{
+  position:absolute;top:16px;padding:6px 13px;
+  border-radius:10px;font-size:12px;font-weight:800;
+}
+.route-badge.left{left:16px}
+.route-badge.right{
+  right:16px;
+  background:rgba(255,255,255,.96);
+  display:flex;align-items:center;gap:5px;
+}
+.route-body{padding:24px}
+.route-name{
+  font-family:'Outfit',sans-serif;
+  font-size:20px;font-weight:800;color:var(--navy);margin-bottom:4px;
+}
+.route-region{font-size:14px;color:var(--muted);margin-bottom:16px}
+.route-meta{
+  display:flex;flex-wrap:wrap;gap:10px;
+  padding-top:16px;border-top:1px solid var(--border);
+}
+.route-meta-item{
+  display:flex;align-items:center;gap:5px;
+  font-size:13px;color:var(--slate);
+}
+.route-rating{
+  display:flex;align-items:center;gap:4px;
+  background:#fef3c7;padding:5px 11px;border-radius:9px;
+  font-weight:700;font-size:13px;color:#92400e;
+  margin-left:auto;
+}
+
+/* ── GUIDES ────────────────────────────────────────── */
+.guides{
+  padding:100px 28px;
+  background:linear-gradient(180deg,rgba(240,253,244,.5) 0%,#fff 100%);
+}
+.guides-inner{max-width:1100px;margin:0 auto}
+.guides-head{text-align:center;margin-bottom:64px}
+.guides-head .section-p{margin:0 auto}
+.guides-grid{
+  display:grid;grid-template-columns:repeat(3,1fr);gap:24px;
+}
+.guide-card{
+  background:#fff;border-radius:var(--r-xl);padding:36px 28px;
+  text-align:center;
+  border:1.5px solid var(--border);
+  box-shadow:var(--card-shadow);
+  transition:all .4s;
+}
+.guide-card:hover{
+  transform:translateY(-8px);
+  box-shadow:0 20px 50px rgba(34,197,94,.15);
+  border-color:rgba(34,197,94,.3);
+}
+.guide-avatar{
+  width:80px;height:80px;border-radius:50%;
+  background:linear-gradient(135deg,#e0f2fe,#bae6fd);
+  display:flex;align-items:center;justify-content:center;
+  font-size:38px;margin:0 auto 16px;
+  border:3px solid rgba(34,197,94,.2);
+  box-shadow:0 8px 24px rgba(34,197,94,.15);
+}
+.guide-name{font-family:'Outfit',sans-serif;font-size:18px;font-weight:800;color:var(--navy);margin-bottom:4px}
+.guide-specialty{font-size:14px;color:var(--muted);margin-bottom:18px}
+.guide-stats{display:flex;justify-content:center;gap:28px}
+.guide-stat{text-align:center}
+.guide-stat-val{
+  font-family:'Outfit',sans-serif;
+  font-size:22px;font-weight:900;color:var(--green);
+}
+.guide-stat-lbl{font-size:12px;color:var(--muted);margin-top:2px}
+.guide-verified{
+  display:inline-flex;align-items:center;gap:5px;
+  font-size:12px;font-weight:700;color:var(--green);
+  background:var(--green-bg);padding:5px 12px;
+  border-radius:8px;margin-bottom:18px;
+}
+
+/* ── TESTIMONIALS ──────────────────────────────────── */
+.testimonials{padding:100px 28px;background:#fff}
+.testimonials-inner{max-width:1300px;margin:0 auto}
+.testimonials-head{text-align:center;margin-bottom:60px}
+.testimonials-head .section-p{margin:0 auto}
+.testi-grid{
+  display:grid;grid-template-columns:repeat(3,1fr);gap:24px;
+}
+.testi-card{
+  background:var(--green-sm);
+  border-radius:var(--r-xl);padding:32px;
+  border:1.5px solid rgba(34,197,94,.15);
+  transition:all .35s;position:relative;
+}
+.testi-card:hover{
+  transform:translateY(-6px);
+  box-shadow:0 18px 48px rgba(34,197,94,.12);
+}
+.testi-quote{
+  font-size:40px;line-height:1;
+  color:rgba(34,197,94,.3);
+  font-family:'Outfit',sans-serif;
+  font-weight:900;margin-bottom:16px;
+}
+.testi-text{
+  font-size:15px;line-height:1.7;
+  color:var(--slate);margin-bottom:24px;
+  font-style:italic;
+}
+.testi-stars{
+  display:flex;gap:3px;margin-bottom:16px;font-size:16px;
+}
+.testi-author{display:flex;align-items:center;gap:12px}
+.testi-author-avatar{
+  width:44px;height:44px;border-radius:50%;
+  background:linear-gradient(135deg,var(--green-bg),#bbf7d0);
+  display:flex;align-items:center;justify-content:center;font-size:22px;
+  border:2px solid rgba(34,197,94,.2);
+}
+.testi-author-name{font-weight:700;font-size:15px;color:var(--navy)}
+.testi-author-role{font-size:13px;color:var(--muted)}
+.testi-featured{
+  border:2px solid rgba(34,197,94,.4);
+  background:linear-gradient(135deg,#f0fdf4,#ecfdf5);
+  transform:scale(1.02);
+}
+.testi-featured:hover{transform:scale(1.02) translateY(-6px)}
+
+/* ── CTA ───────────────────────────────────────────── */
+.cta-section{padding:80px 28px 120px}
+.cta-box{
+  max-width:1100px;margin:0 auto;
+  padding:80px 60px;
+  border-radius:40px;
+  background:linear-gradient(135deg,#22c55e 0%,#16a34a 40%,#0d9488 100%);
+  box-shadow:0 40px 90px rgba(34,197,94,.45);
+  text-align:center;
+  position:relative;overflow:hidden;
+}
+.cta-deco{
+  position:absolute;border-radius:50%;
+  background:rgba(255,255,255,.07);
+  pointer-events:none;
+}
+.cta-deco-1{width:300px;height:300px;top:-80px;right:-60px}
+.cta-deco-2{width:200px;height:200px;bottom:-40px;left:-30px}
+.cta-deco-3{width:150px;height:150px;top:50%;left:50%;transform:translate(-50%,-50%)}
+.cta-h2{
+  font-family:'Outfit',sans-serif;
+  font-size:clamp(30px,4vw,48px);
+  font-weight:900;color:#fff;
+  margin-bottom:16px;position:relative;
+  letter-spacing:-.03em;
+}
+.cta-p{
+  font-size:18px;color:rgba(255,255,255,.85);
+  max-width:580px;margin:0 auto 44px;
+  line-height:1.7;position:relative;
+}
+.cta-btns{
+  display:flex;gap:16px;justify-content:center;
+  flex-wrap:wrap;position:relative;
+}
+.cta-btn-1{
+  display:inline-flex;align-items:center;gap:8px;
+  padding:17px 36px;font-size:16px;font-weight:800;
+  color:var(--green);background:#fff;
+  border-radius:18px;text-decoration:none;
+  box-shadow:0 10px 32px rgba(0,0,0,.18);
+  transition:all .3s;
+}
+.cta-btn-1:hover{transform:translateY(-3px);box-shadow:0 16px 44px rgba(0,0,0,.22)}
+.cta-btn-2{
+  display:inline-flex;align-items:center;gap:8px;
+  padding:17px 36px;font-size:16px;font-weight:800;
+  color:#fff;
+  background:rgba(255,255,255,.15);
+  backdrop-filter:blur(8px);
+  border:2px solid rgba(255,255,255,.4);
+  border-radius:18px;text-decoration:none;
+  transition:all .3s;
+}
+.cta-btn-2:hover{background:rgba(255,255,255,.25)}
+.cta-app-note{
+  margin-top:24px;font-size:13px;
+  color:rgba(255,255,255,.7);position:relative;
+  display:flex;justify-content:center;align-items:center;gap:8px;
+}
+
+/* ── FOOTER ────────────────────────────────────────── */
+footer{background:var(--navy);padding:80px 28px 40px;color:#fff}
+.footer-inner{max-width:1360px;margin:0 auto}
+.footer-top{
+  display:grid;grid-template-columns:2fr 1fr 1fr 1fr;
+  gap:60px;margin-bottom:60px;
+}
+.footer-brand-name{
+  font-family:'Outfit',sans-serif;
+  font-size:22px;font-weight:800;
+  margin-bottom:14px;
+  display:flex;align-items:center;gap:10px;
+}
+.footer-brand-name span{color:var(--green-xl)}
+.footer-desc{font-size:14px;color:#64748b;line-height:1.7;max-width:280px;margin-bottom:24px}
+.footer-social{display:flex;gap:10px}
+.footer-social-btn{
+  width:40px;height:40px;border-radius:12px;
+  background:rgba(255,255,255,.07);
+  display:flex;align-items:center;justify-content:center;
+  font-size:18px;cursor:pointer;transition:all .2s;text-decoration:none;
+}
+.footer-social-btn:hover{background:rgba(34,197,94,.25);transform:translateY(-2px)}
+.footer-col h4{
+  font-family:'Outfit',sans-serif;
+  font-size:13px;font-weight:700;
+  color:var(--green-xl);letter-spacing:.07em;
+  text-transform:uppercase;margin-bottom:20px;
+}
+.footer-links{list-style:none;display:flex;flex-direction:column;gap:10px}
+.footer-links a{
+  color:#64748b;font-size:14px;text-decoration:none;
+  transition:color .2s;display:block;
+}
+.footer-links a:hover{color:var(--green-xl);transform:translateX(3px)}
+.footer-bottom{
+  padding-top:28px;
+  border-top:1px solid rgba(255,255,255,.07);
+  display:flex;justify-content:space-between;align-items:center;
+  flex-wrap:wrap;gap:16px;
+}
+.footer-bottom-left{font-size:13px;color:#475569}
+.footer-bottom-right{display:flex;gap:20px}
+.footer-bottom-right a{color:#475569;font-size:13px;text-decoration:none}
+.footer-bottom-right a:hover{color:var(--green-xl)}
+
+/* ── BIG CTA BUTTON ────────────────────────────────── */
+.btn-big{
+  display:inline-flex;align-items:center;gap:12px;
+  padding:18px 36px;font-size:17px;font-weight:800;
+  color:#fff;
+  background:linear-gradient(135deg,var(--green-l),var(--green));
+  border:none;border-radius:20px;text-decoration:none;cursor:pointer;
+  box-shadow:var(--green-shadow);
+  transition:all .3s cubic-bezier(.4,0,.2,1);
+  font-family:'DM Sans',sans-serif;
+}
+.btn-big:hover{transform:translateY(-3px);box-shadow:0 16px 44px rgba(34,197,94,.5)}
+.btn-big-outline{
+  display:inline-flex;align-items:center;gap:10px;
+  padding:16px 32px;font-size:16px;font-weight:700;
+  color:var(--green);
+  background:transparent;
+  border:2px solid rgba(34,197,94,.35);
+  border-radius:18px;text-decoration:none;cursor:pointer;
+  transition:all .3s;
+  font-family:'DM Sans',sans-serif;
+}
+.btn-big-outline:hover{
+  background:rgba(34,197,94,.07);
+  border-color:var(--green);
+}
+
+/* ── DIFFICULTY BADGE ──────────────────────────────── */
+.badge-easy{background:#dcfce7;color:#16a34a}
+.badge-medium{background:#fef3c7;color:#d97706}
+.badge-hard{background:#fee2e2;color:#dc2626}
+
+/* ── RESPONSIVE ────────────────────────────────────── */
+@media(max-width:1024px){
+  .hero-inner{grid-template-columns:1fr;gap:40px}
+  .hero-visual{display:none}
+  .stats-inner,.features-grid,.eco-grid{grid-template-columns:repeat(2,1fr)}
+  .routes-grid,.guides-grid,.testi-grid{grid-template-columns:1fr}
+  .how-inner{grid-template-columns:1fr}
+  .how-visual{display:none}
+  .footer-top{grid-template-columns:1fr 1fr}
+  .nav-links{display:none}
+  .routes-head{flex-direction:column;align-items:flex-start;gap:16px}
+  .testi-featured{transform:none}
+  .testi-featured:hover{transform:translateY(-6px)}
+}
+@media(max-width:640px){
+  .stats-inner{grid-template-columns:repeat(2,1fr)}
+  .eco-grid{grid-template-columns:1fr 1fr}
+  .hero-btns{flex-direction:column}
+  .cta-box{padding:48px 28px}
+  .footer-top{grid-template-columns:1fr}
+}
+
+/* ── INTERSECTION OBSERVER CLASSES ────────────────── */
+.reveal{opacity:0;transform:translateY(28px);transition:all .65s cubic-bezier(.4,0,.2,1)}
+.reveal.visible{opacity:1;transform:translateY(0)}
+.reveal-scale{opacity:0;transform:scale(.92);transition:all .55s cubic-bezier(.4,0,.2,1)}
+.reveal-scale.visible{opacity:1;transform:scale(1)}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav class="nav" id="mainNav">
+  <div class="nav-inner">
+    <a href="#" class="logo">
+      <div class="logo-icon">🌿</div>
+      <span class="logo-text">Eco<span>Route</span></span>
+    </a>
+    <div class="nav-links">
+      <a href="#map" class="nav-link">🗺️ Карта</a>
+      <a href="#routes" class="nav-link">📍 Маршруттар</a>
+      <a href="#guides" class="nav-link">👨‍🏫 Гидтер</a>
+      <a href="#eco" class="nav-link">♻️ Eco Bonus</a>
+    </div>
+    <div class="nav-actions">
+      <a href="/auth/login" class="btn-ghost">Кіру</a>
+      <a href="/auth/register" class="btn-solid">Тіркелу →</a>
+    </div>
+  </div>
+</nav>
+
+<!-- TICKER -->
+<div class="ticker-wrap">
+  <div class="ticker-inner" id="ticker">
+    <span class="ticker-item">🌿 Жасыл белдеу — 12 км, 3 сағат</span>
+    <span class="ticker-item">🏔️ Бурабай шыңы — жаңа маршрут қосылды!</span>
+    <span class="ticker-item">🦩 Қорғалжын — фламинго маусымы басталды</span>
+    <span class="ticker-item">♻️ 1,250+ Eco Action бүгін орындалды</span>
+    <span class="ticker-item">🌱 CO₂ 2.5 тонна үнемделді</span>
+    <span class="ticker-item">⭐ Мұрат гиді — апта гиді!</span>
+    <span class="ticker-item">🌿 Жасыл белдеу — 12 км, 3 сағат</span>
+    <span class="ticker-item">🏔️ Бурабай шыңы — жаңа маршрут қосылды!</span>
+    <span class="ticker-item">🦩 Қорғалжын — фламинго маусымы басталды</span>
+    <span class="ticker-item">♻️ 1,250+ Eco Action бүгін орындалды</span>
+    <span class="ticker-item">🌱 CO₂ 2.5 тонна үнемделді</span>
+    <span class="ticker-item">⭐ Мұрат гиді — апта гиді!</span>
+  </div>
+</div>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="blob blob-1"></div>
+  <div class="blob blob-2"></div>
+  <div class="blob blob-3"></div>
+  <div class="hero-bg"></div>
+
+  <div class="hero-inner">
+    <div class="ani-fadeUp">
+      <div class="hero-badge">
+        <span>🌱</span> Жасыл туризм платформасы #1
+      </div>
+      <h1 class="hero-h1">
+        Қазақстанның
+        <span class="grad">табиғатын аш</span>
+      </h1>
+      <p class="hero-p">
+        Астана, Бурабай, Қорғалжын — экологиялық маршруттар, верификацияланған гидтер және Eco-bonus жүйесі. Табиғатты сүй, қорға, балл жина!
+      </p>
+      <div class="hero-btns">
+        <a href="/auth/register?role=tourist" class="btn-hero-1">
+          <span>🧳</span> Турист болу
+        </a>
+        <a href="/auth/register?role=guide" class="btn-hero-2">
+          <span>🎯</span> Гид болу
+        </a>
+      </div>
+      <div class="hero-trust">
+        <div class="hero-trust-item"><div class="hero-trust-dot"></div>Тегін тіркелу</div>
+        <div class="hero-trust-item"><div class="hero-trust-dot"></div>1000+ турист</div>
+        <div class="hero-trust-item"><div class="hero-trust-dot"></div>50+ гид</div>
+      </div>
+    </div>
+
+    <!-- FLOATING CARDS VISUAL -->
+    <div class="hero-visual ani-pop d2">
+      <!-- Main map card -->
+      <div class="hv-card hv-main ani-float" style="animation-delay:0s">
+        <div class="hv-map-area">
+          <div class="hv-map-grid"></div>
+          <span class="hv-map-emoji">🗺️</span>
+          <div class="hv-map-chip tl">🌍 3 аймақ</div>
+          <div class="hv-map-chip br">📍 25+ маршрут</div>
+        </div>
+        <div class="hv-card-body">
+          <div class="hv-card-title">Интерактивті карта</div>
+          <a href="/map" class="hv-btn">Картаны ашу →</a>
+        </div>
+      </div>
+
+      <!-- Eco bonus card -->
+      <div class="hv-card hv-bonus ani-float" style="animation-delay:.6s">
+        <div class="hv-bonus-icon">🌱</div>
+        <div class="hv-bonus-label">Eco-bonus</div>
+        <div class="hv-bonus-val">+1,250</div>
+        <div class="hv-bonus-sub">балл жиналды</div>
+      </div>
+
+      <!-- Route preview card -->
+      <div class="hv-card hv-route ani-float" style="animation-delay:1.2s">
+        <div class="hv-route-row">
+          <div class="hv-route-img">🏔️</div>
+          <div>
+            <div class="hv-route-name">Бурабай шыңы</div>
+            <div class="hv-route-meta">
+              <span>⭐ 4.9</span>
+              <span style="color:var(--muted)">·</span>
+              <span style="color:var(--muted)">18 км</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Air quality card -->
+      <div class="hv-card hv-air ani-float" style="animation-delay:1.8s">
+        <div class="hv-air-label">Астана ауасы</div>
+        <div class="hv-air-val">AQI 24</div>
+        <div class="hv-air-status">✅ Тамаша</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- STATS BAND -->
+<section class="stats-section">
+  <div class="stats-inner">
+    <div class="stat-card reveal" data-delay="0">
+      <div class="stat-icon">🗺️</div>
+      <div class="stat-val" style="color:#16a34a" data-count="25">0</div>
+      <div class="stat-lbl">Маршрут</div>
+    </div>
+    <div class="stat-card reveal" data-delay="1">
+      <div class="stat-icon">👨‍🏫</div>
+      <div class="stat-val" style="color:#2563eb" data-count="50">0</div>
+      <div class="stat-lbl">Верификацияланған гид</div>
+    </div>
+    <div class="stat-card reveal" data-delay="2">
+      <div class="stat-icon">🧳</div>
+      <div class="stat-val" style="color:#7c3aed" data-count="1000">0</div>
+      <div class="stat-lbl">Белсенді турист</div>
+    </div>
+    <div class="stat-card reveal" data-delay="3">
+      <div class="stat-icon">🌱</div>
+      <div class="stat-val" style="color:#0d9488" data-count="2500" data-suffix="кг">0</div>
+      <div class="stat-lbl">CO₂ үнемделді</div>
+    </div>
+  </div>
+</section>
+
+<!-- FEATURES -->
+<section class="features" id="features">
+  <div class="features-head reveal">
+    <div class="section-label">🚀 Мүмкіндіктер</div>
+    <h2 class="section-h2">Неге <span style="color:var(--green)">EcoRoute</span>?</h2>
+    <p class="section-p">Қазақстанның табиғатын сақтай отырып, саяхаттауға арналған барлық нәрсе</p>
+  </div>
+  <div class="features-grid">
+    <div class="feature-card reveal" data-delay="0">
+      <div class="feature-icon-wrap" style="background:linear-gradient(135deg,#22c55e,#16a34a)">🗺️</div>
+      <h3 class="feature-h3">Интерактивті карта</h3>
+      <p class="feature-p">Астана, Бурабай, Қорғалжын аймақтарының нақты маршруттары, кемпинг нүктелері мен демалыс орындары</p>
+      <div class="feature-arrow">Толығырақ →</div>
+    </div>
+    <div class="feature-card reveal" data-delay="1">
+      <div class="feature-icon-wrap" style="background:linear-gradient(135deg,#06b6d4,#0891b2)">🌿</div>
+      <h3 class="feature-h3">Eco-bonus жүйесі</h3>
+      <p class="feature-p">Қоқыс жинасаң балл аласың. Баллдарды серіктес дүкендерде жеңілдікке айырбастай аласың</p>
+      <div class="feature-arrow">Толығырақ →</div>
+    </div>
+    <div class="feature-card reveal" data-delay="2">
+      <div class="feature-icon-wrap" style="background:linear-gradient(135deg,#8b5cf6,#7c3aed)">👨‍🏫</div>
+      <h3 class="feature-h3">Тәжірибелі гидтер</h3>
+      <p class="feature-p">Верификацияланған жергілікті гидтер. Рейтинг жүйесі, пікірлер, тікелей брондау</p>
+      <div class="feature-arrow">Гидтерді көру →</div>
+    </div>
+    <div class="feature-card reveal" data-delay="3">
+      <div class="feature-icon-wrap" style="background:linear-gradient(135deg,#f59e0b,#d97706)">🏕️</div>
+      <h3 class="feature-h3">POI нүктелері</h3>
+      <p class="feature-p">Кемпинг, демалыс аймақтары, экологиялық контейнерлер — картада нақты орындары</p>
+      <div class="feature-arrow">Картаны ашу →</div>
+    </div>
+  </div>
+</section>
+
+<!-- HOW IT WORKS -->
+<section class="how" id="how">
+  <div class="how-inner">
+    <div>
+      <div class="reveal">
+        <div class="section-label">📋 Қалай жұмыс жасайды</div>
+        <h2 class="section-h2">4 қадам — бастауға дайынсың</h2>
+        <p class="section-p">Тіркелуден бастап маршрутты аяқтауға дейін — өте оңай</p>
+      </div>
+      <div class="how-steps" style="margin-top:40px">
+        <div class="how-step reveal" data-delay="0">
+          <div class="how-step-num">1</div>
+          <div class="how-step-content">
+            <h4>Тіркел немесе кір</h4>
+            <p>Турист немесе гид ретінде тіркел. Профильді толтыр, жеке дизайн та</p>
+          </div>
+        </div>
+        <div class="how-step reveal" data-delay="1">
+          <div class="how-step-num">2</div>
+          <div class="how-step-content">
+            <h4>Маршрут таңда</h4>
+            <p>Картадан Астана, Бурабай немесе Қорғалжын бағытын таңдап, гид брондаймын</p>
+          </div>
+        </div>
+        <div class="how-step reveal" data-delay="2">
+          <div class="how-step-num">3</div>
+          <div class="how-step-content">
+            <h4>Саяхатта & табиғатты қорға</h4>
+            <p>Маршрутпен жүр. Қоқыс жинасаң — фотосын жүктеп, Eco-балл ал</p>
+          </div>
+        </div>
+        <div class="how-step reveal" data-delay="3">
+          <div class="how-step-num">4</div>
+          <div class="how-step-content">
+            <h4>Баллдарды пайдалан</h4>
+            <p>Серіктестер дүкенінде жеңілдік, ертеңгі маршрутқа жеңілдетілген брондау</p>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="how-visual reveal-scale">
+      <div class="how-phone ani-float">📱</div>
+      <div class="how-phone-stats">
+        <div class="how-phone-stat">
+          <div class="how-phone-stat-val">+300</div>
+          <div class="how-phone-stat-lbl">балл бүгін</div>
+        </div>
+        <div class="how-phone-stat">
+          <div class="how-phone-stat-val">12км</div>
+          <div class="how-phone-stat-lbl">өтілді</div>
+        </div>
+        <div class="how-phone-stat">
+          <div class="how-phone-stat-val">3🗑️</div>
+          <div class="how-phone-stat-lbl">жиналды</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ECO BONUS -->
+<section class="eco" id="eco">
+  <div class="eco-inner">
+    <div class="eco-head reveal">
+      <div class="section-label">♻️ ЖАҢА ФУНКЦИЯ</div>
+      <h2 class="section-h2">Eco Actions — Қоқыс жина, <span style="color:var(--green)">Bonus ал!</span></h2>
+      <p class="section-p" style="margin:0 auto">Маршрут бойында экологиялық іс-шаралар орындаңыз, балл жинаңыз — жеңілдіктерге айырбастаңыз</p>
+    </div>
+    <div class="eco-grid">
+      <div class="eco-card reveal" data-delay="0">
+        <div class="eco-card-icon">🗑️</div>
+        <div class="eco-card-title">Қоқыс жинау</div>
+        <div class="eco-card-bonus">+100 балл</div>
+        <div class="eco-card-desc">Әр толы қап үшін. Фотосын жүктеңіз — балл бірден есептеледі</div>
+      </div>
+      <div class="eco-card reveal" data-delay="1">
+        <div class="eco-card-icon">♻️</div>
+        <div class="eco-card-title">Recycling</div>
+        <div class="eco-card-bonus">+50 балл</div>
+        <div class="eco-card-desc">Қайта өңдеу контейнеріне тастасаңыз — QR сканерлеп балл алыңыз</div>
+      </div>
+      <div class="eco-card reveal" data-delay="2">
+        <div class="eco-card-icon">🌱</div>
+        <div class="eco-card-title">Ағаш отырғызу</div>
+        <div class="eco-card-bonus">+500 балл</div>
+        <div class="eco-card-desc">Eco іс-шараларына қатысып, ағаш отырғызыңыз — максималды балл</div>
+      </div>
+      <div class="eco-card reveal" data-delay="3">
+        <div class="eco-card-icon">📸</div>
+        <div class="eco-card-title">Eco фото</div>
+        <div class="eco-card-bonus">+25 балл</div>
+        <div class="eco-card-desc">#EcoRoute хэштегімен фото жүктеңіз — балл алыңыз</div>
+      </div>
+    </div>
+    <div class="eco-cta reveal">
+      <a href="/eco-actions" class="btn-big">🌿 Eco Actions-қа өту →</a>
+    </div>
+  </div>
+</section>
+
+<!-- ROUTES -->
+<section class="routes" id="routes">
+  <div class="routes-inner">
+    <div class="routes-head reveal">
+      <div>
+        <div class="section-label">📍 Маршруттар</div>
+        <h2 class="section-h2">Танымал маршруттар</h2>
+        <p class="section-p" style="max-width:400px">Ең көп таңдалған экологиялық бағыттар</p>
+      </div>
+      <a href="/routes" class="btn-big-outline">Барлығын көру →</a>
+    </div>
+    <div class="routes-grid">
+
+      <a href="/routes/1" class="route-card reveal" data-delay="0">
+        <div class="route-img" style="background:linear-gradient(135deg,#22c55e,#16a34a)">
+          <span class="route-img-emoji">🌲</span>
+          <div class="route-badge left badge-easy">Оңай</div>
+          <div class="route-badge right"><span>🌱</span><span style="color:var(--green);font-weight:800">+50</span></div>
+        </div>
+        <div class="route-body">
+          <div class="route-name">Жасыл белдеу серуені</div>
+          <div class="route-region">📍 Астана</div>
+          <p style="font-size:14px;color:var(--slate);line-height:1.6;margin-bottom:14px">
+            Астананың жасыл белдеуі арқылы өтетін таңғажайып маршрут. Таза ауамен тыныс алыңыз.
+          </p>
+          <div class="route-meta">
+            <div class="route-meta-item">🚶 Жаяу</div>
+            <div class="route-meta-item">📏 12 км</div>
+            <div class="route-meta-item">⏱️ 3 сағат</div>
+            <div class="route-rating">⭐ 4.8 <span style="color:var(--muted)">(234)</span></div>
+          </div>
+        </div>
+      </a>
+
+      <a href="/routes/2" class="route-card reveal" data-delay="1">
+        <div class="route-img" style="background:linear-gradient(135deg,#3b82f6,#1d4ed8)">
+          <span class="route-img-emoji">🏔️</span>
+          <div class="route-badge left badge-medium">Орташа</div>
+          <div class="route-badge right"><span>🌱</span><span style="color:var(--green);font-weight:800">+100</span></div>
+        </div>
+        <div class="route-body">
+          <div class="route-name">Бурабай шыңына шығу</div>
+          <div class="route-region">🏔️ Бурабай</div>
+          <p style="font-size:14px;color:var(--slate);line-height:1.6;margin-bottom:14px">
+            Қазақстанның Швейцариясы — Бурабайдың ең әдемі шыңына шығу маршруты.
+          </p>
+          <div class="route-meta">
+            <div class="route-meta-item">🚶 Жаяу</div>
+            <div class="route-meta-item">📏 18 км</div>
+            <div class="route-meta-item">⏱️ 5 сағат</div>
+            <div class="route-rating">⭐ 4.9 <span style="color:var(--muted)">(189)</span></div>
+          </div>
+        </div>
+      </a>
+
+      <a href="/routes/3" class="route-card reveal" data-delay="2">
+        <div class="route-img" style="background:linear-gradient(135deg,#ec4899,#db2777)">
+          <span class="route-img-emoji">🦩</span>
+          <div class="route-badge left badge-easy">Оңай</div>
+          <div class="route-badge right"><span>🌱</span><span style="color:var(--green);font-weight:800">+40</span></div>
+        </div>
+        <div class="route-body">
+          <div class="route-name">Қорғалжын көлдері</div>
+          <div class="route-region">🦩 Қорғалжын</div>
+          <p style="font-size:14px;color:var(--slate);line-height:1.6;margin-bottom:14px">
+            UNESCO қорығындағы фламинголарды көру маршруты. Ерекше құстарды бақылаңыз.
+          </p>
+          <div class="route-meta">
+            <div class="route-meta-item">🚴 Велосипед</div>
+            <div class="route-meta-item">📏 8 км</div>
+            <div class="route-meta-item">⏱️ 2 сағат</div>
+            <div class="route-rating">⭐ 4.7 <span style="color:var(--muted)">(156)</span></div>
+          </div>
+        </div>
+      </a>
+
+    </div>
+  </div>
+</section>
+
+<!-- GUIDES -->
+<section class="guides" id="guides">
+  <div class="guides-inner">
+    <div class="guides-head reveal">
+      <div class="section-label">👨‍🏫 Гидтер</div>
+      <h2 class="section-h2">Тәжірибелі гидтер</h2>
+      <p class="section-p">Верификацияланған жергілікті гидтермен қауіпсіз және мазмұнды саяхат</p>
+    </div>
+    <div class="guides-grid">
+      <div class="guide-card reveal" data-delay="0">
+        <div class="guide-avatar">👨</div>
+        <div class="guide-verified">✓ Верификацияланған</div>
+        <div class="guide-name">Мұрат Ә.</div>
+        <div class="guide-specialty">📍 Бурабай маршруттары</div>
+        <div class="guide-stats">
+          <div class="guide-stat">
+            <div class="guide-stat-val">4.9</div>
+            <div class="guide-stat-lbl">⭐ Рейтинг</div>
+          </div>
+          <div class="guide-stat">
+            <div class="guide-stat-val">89</div>
+            <div class="guide-stat-lbl">🎯 Тур</div>
+          </div>
+          <div class="guide-stat">
+            <div class="guide-stat-val">3+</div>
+            <div class="guide-stat-lbl">📅 Жыл</div>
+          </div>
+        </div>
+      </div>
+      <div class="guide-card reveal" data-delay="1">
+        <div class="guide-avatar">👩</div>
+        <div class="guide-verified">✓ Верификацияланған</div>
+        <div class="guide-name">Айгүл К.</div>
+        <div class="guide-specialty">📍 Жасыл белдеу</div>
+        <div class="guide-stats">
+          <div class="guide-stat">
+            <div class="guide-stat-val">4.8</div>
+            <div class="guide-stat-lbl">⭐ Рейтинг</div>
+          </div>
+          <div class="guide-stat">
+            <div class="guide-stat-val">67</div>
+            <div class="guide-stat-lbl">🎯 Тур</div>
+          </div>
+          <div class="guide-stat">
+            <div class="guide-stat-val">2+</div>
+            <div class="guide-stat-lbl">📅 Жыл</div>
+          </div>
+        </div>
+      </div>
+      <div class="guide-card reveal" data-delay="2">
+        <div class="guide-avatar">👨</div>
+        <div class="guide-verified">✓ Верификацияланған</div>
+        <div class="guide-name">Арман Б.</div>
+        <div class="guide-specialty">📍 Қорғалжын</div>
+        <div class="guide-stats">
+          <div class="guide-stat">
+            <div class="guide-stat-val">4.9</div>
+            <div class="guide-stat-lbl">⭐ Рейтинг</div>
+          </div>
+          <div class="guide-stat">
+            <div class="guide-stat-val">124</div>
+            <div class="guide-stat-lbl">🎯 Тур</div>
+          </div>
+          <div class="guide-stat">
+            <div class="guide-stat-val">5+</div>
+            <div class="guide-stat-lbl">📅 Жыл</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- TESTIMONIALS -->
+<section class="testimonials">
+  <div class="testimonials-inner">
+    <div class="testimonials-head reveal">
+      <div class="section-label">💬 Пікірлер</div>
+      <h2 class="section-h2">Туристер не дейді?</h2>
+      <p class="section-p">1000+ туристің нақты пікірі</p>
+    </div>
+    <div class="testi-grid">
+
+      <div class="testi-card reveal" data-delay="0">
+        <div class="testi-stars">⭐⭐⭐⭐⭐</div>
+        <div class="testi-quote">"</div>
+        <p class="testi-text">Бурабай маршруты керемет болды! Мұрат гиді өте кәсіби, табиғат туралы көп білетін. Eco-bonus жүйесі арқылы 500 балл жинадым, сол балдарға туристік жабдықтар дүкенінен 15% жеңілдік алдым.</p>
+        <div class="testi-author">
+          <div class="testi-author-avatar">👩</div>
+          <div>
+            <div class="testi-author-name">Зарина М.</div>
+            <div class="testi-author-role">Туристка • Алматы</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="testi-card testi-featured reveal" data-delay="1">
+        <div class="testi-stars">⭐⭐⭐⭐⭐</div>
+        <div class="testi-quote">"</div>
+        <p class="testi-text">EcoRoute — ең жақсы қазақстандық eco-платформа! Қорғалжында фламинго көрдім, Айгүл гидім тамаша сүйемелдеді. Қоқыс жинап балл жинадық, бала-шағалармен бірге табиғатты қорғауды үйрендік!</p>
+        <div class="testi-author">
+          <div class="testi-author-avatar">👨</div>
+          <div>
+            <div class="testi-author-name">Бахтияр С.</div>
+            <div class="testi-author-role">Тіркелген турист • Астана</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="testi-card reveal" data-delay="2">
+        <div class="testi-stars">⭐⭐⭐⭐⭐</div>
+        <div class="testi-quote">"</div>
+        <p class="testi-text">Гид ретінде EcoRoute — идеал платформа. Туристтерді оңай табамын, брондау жүйесі өте ыңғайлы. Eco-bonus жүйесі туристтерді табиғатты қорғауға ынталандырады. Рекомендую!</p>
+        <div class="testi-author">
+          <div class="testi-author-avatar">👩</div>
+          <div>
+            <div class="testi-author-name">Назгүл Т.</div>
+            <div class="testi-author-role">Гид • Бурабай</div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section class="cta-section">
+  <div class="cta-box reveal">
+    <div class="cta-deco cta-deco-1"></div>
+    <div class="cta-deco cta-deco-2"></div>
+    <div class="cta-deco cta-deco-3"></div>
+    <h2 class="cta-h2">Саяхатты бүгіннен баста! 🌿</h2>
+    <p class="cta-p">Тіркеліп, алғашқы маршрутыңды таңда. Eco-bonus жина, табиғатты сақта. Тегін!</p>
+    <div class="cta-btns">
+      <a href="/auth/register" class="cta-btn-1">🌱 Тегін тіркелу</a>
+      <a href="/map" class="cta-btn-2">🗺️ Картаны көру</a>
+    </div>
+    <div class="cta-app-note">
+      <span>✓ Тегін тіркелу</span>
+      <span>·</span>
+      <span>✓ Карта картасы дереу ашылады</span>
+      <span>·</span>
+      <span>✓ Eco-балл бірден есептеледі</span>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-inner">
+    <div class="footer-top">
+      <div>
+        <div class="footer-brand-name">
+          <span style="font-size:26px">🌿</span>
+          Eco<span>Route</span>
+        </div>
+        <p class="footer-desc">Қазақстанның жасыл туризм платформасы. Табиғатты сүй, қорға, саяхатта! 💚</p>
+        <div class="footer-social">
+          <a class="footer-social-btn" href="#">📘</a>
+          <a class="footer-social-btn" href="#">📸</a>
+          <a class="footer-social-btn" href="#">🐦</a>
+          <a class="footer-social-btn" href="#">▶️</a>
+        </div>
+      </div>
+      <div class="footer-col">
+        <h4>Навигация</h4>
+        <ul class="footer-links">
+          <li><a href="/map">🗺️ Интерактивті карта</a></li>
+          <li><a href="/routes">📍 Маршруттар</a></li>
+          <li><a href="/guides">👨‍🏫 Гидтер</a></li>
+          <li><a href="/eco-actions">♻️ Eco Actions</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Аймақтар</h4>
+        <ul class="footer-links">
+          <li><a href="#">🌲 Жасыл белдеу</a></li>
+          <li><a href="#">🏔️ Бурабай</a></li>
+          <li><a href="#">🦩 Қорғалжын</a></li>
+          <li><a href="#">🏙️ Астана қаласы</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Байланыс</h4>
+        <ul class="footer-links">
+          <li><a href="#">📧 <span class="__cf_email__" data-cfemail="0960676f66496c6a667b667c7d6c276273">[email&#160;protected]</span></a></li>
+          <li><a href="#">📞 +7 777 123 45 67</a></li>
+          <li><a href="#">📍 Астана, Қазақстан</a></li>
+          <li><a href="#">🕐 Дс–Жс 9:00–18:00</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <div class="footer-bottom-left">© 2026 EcoRoute Astana. Барлық құқықтар қорғалған.</div>
+      <div class="footer-bottom-right">
+        <a href="#">Құпиялық саясаты</a>
+        <a href="#">Қызмет шарттары</a>
+        <a href="#">Cookies</a>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<!-- SCROLL TO TOP BUTTON -->
+<button id="scrollTop" onclick="window.scrollTo({top:0,behavior:'smooth'})" style="
+  position:fixed;bottom:28px;right:28px;z-index:999;
+  width:50px;height:50px;border-radius:50%;
+  background:linear-gradient(135deg,#22c55e,#16a34a);
+  color:#fff;font-size:20px;border:none;cursor:pointer;
+  box-shadow:0 8px 24px rgba(34,197,94,.45);
+  transition:all .3s;opacity:0;transform:translateY(10px);
+  display:flex;align-items:center;justify-content:center;
+">↑</button>
+
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+/* ── STICKY NAV ─── */
+const nav = document.getElementById('mainNav');
+window.addEventListener('scroll',()=>{
+  nav.classList.toggle('scrolled',window.scrollY>60);
+  const btn = document.getElementById('scrollTop');
+  if(window.scrollY>400){btn.style.opacity='1';btn.style.transform='translateY(0)'}
+  else{btn.style.opacity='0';btn.style.transform='translateY(10px)'}
+});
+
+/* ── COUNTER ANIMATION ─── */
+function animateCount(el){
+  const target = parseInt(el.dataset.count);
+  const suffix = el.dataset.suffix||'';
+  const isLarge = target>=1000;
+  const duration = 1600;
+  const start = performance.now();
+  function step(now){
+    const progress = Math.min((now-start)/duration,1);
+    const eased = 1-Math.pow(1-progress,3);
+    const val = Math.floor(eased*target);
+    el.textContent = isLarge
+      ? (val>=1000?(val/1000).toFixed(1)+'к':val)+suffix
+      : val+'+'+suffix;
+    if(progress<1) requestAnimationFrame(step);
+    else el.textContent = isLarge
+      ? (target/1000).toFixed(target%1000===0?0:1)+'к'+suffix
+      : target+'+'+suffix;
+  }
+  requestAnimationFrame(step);
+}
+
+/* ── INTERSECTION OBSERVER ─── */
+const io = new IntersectionObserver((entries)=>{
+  entries.forEach(entry=>{
+    if(!entry.isIntersecting) return;
+    const el = entry.target;
+    const delay = parseFloat(el.dataset.delay||0)*120;
+    setTimeout(()=>{
+      el.classList.add('visible');
+      // counter
+      const counter = el.querySelector('[data-count]')||el;
+      if(counter.dataset.count) animateCount(counter);
+    },delay);
+    io.unobserve(el);
+  });
+},{threshold:.15});
+
+document.querySelectorAll('.reveal,.reveal-scale').forEach(el=>io.observe(el));
+
+/* ── STAT CARDS COUNTERS ─── */
+const statIo = new IntersectionObserver((entries)=>{
+  entries.forEach(entry=>{
+    if(!entry.isIntersecting) return;
+    const card = entry.target;
+    const counter = card.querySelector('[data-count]');
+    const delay = parseInt(card.dataset.delay||0)*150;
+    if(counter){
+      setTimeout(()=>{
+        animateCount(counter);
+      },delay);
+    }
+    statIo.unobserve(card);
+  });
+},{threshold:.3});
+document.querySelectorAll('.stat-card').forEach(el=>statIo.observe(el));
+
+/* ── NAV ACTIVE STATE ─── */
+const sections = document.querySelectorAll('section[id]');
+const navLinks = document.querySelectorAll('.nav-link');
+window.addEventListener('scroll',()=>{
+  let current='';
+  sections.forEach(s=>{
+    if(w
