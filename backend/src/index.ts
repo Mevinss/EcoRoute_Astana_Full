@@ -17,7 +17,28 @@ const app = express();
 const PORT = process.env.PORT || 4000;
 
 // ── Middleware ──
-app.use(helmet());
+// CSP configured for the JSON API server.
+// Note: crossOriginEmbedderPolicy is disabled to allow MapLibre GL
+// web workers (which use blob: URLs) to function correctly when the
+// frontend fetches resources through this backend proxy.
+app.use(helmet({
+  contentSecurityPolicy: {
+    directives: {
+      defaultSrc: ["'self'"],
+      scriptSrc: ["'self'"],
+      styleSrc: ["'self'", "'unsafe-inline'", 'https:'],
+      imgSrc: ["'self'", 'data:', 'blob:', 'https:'],
+      connectSrc: ["'self'", 'https://basemaps.cartocdn.com',
+                   'https://routing.openstreetmap.de'],
+      fontSrc: ["'self'", 'https:', 'data:'],
+      workerSrc: ["'self'", 'blob:'],
+      childSrc: ["'self'", 'blob:'],
+      frameSrc: ["'none'"],
+      objectSrc: ["'none'"],
+    },
+  },
+  crossOriginEmbedderPolicy: false,
+}));
 app.use(cors({
   origin: process.env.FRONTEND_URL || 'http://localhost:3000',
   credentials: true,
