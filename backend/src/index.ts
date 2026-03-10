@@ -9,6 +9,7 @@ import routesRouter from './routes/routes.routes';
 import poisRouter from './routes/pois.routes';
 import bookingsRouter from './routes/bookings.routes';
 import ecoRouter from './routes/eco.routes';
+import navigateRouter from './routes/navigate.routes';
 
 dotenv.config();
 
@@ -35,6 +36,7 @@ app.use('/api/routes',   routesRouter);
 app.use('/api/pois',     poisRouter);
 app.use('/api/bookings', bookingsRouter);
 app.use('/api/eco',      ecoRouter);
+app.use('/api/navigate', navigateRouter);
 
 // ── 404 ──
 app.use((req, res) => {
