@@ -8,6 +8,26 @@ import Link from 'next/link';
 const maplibregl = typeof window !== 'undefined' ? require('maplibre-gl') : null;
 import 'maplibre-gl/dist/maplibre-gl.css';
 
+// TypeScript interfaces for type safety
+interface EcoRoute {
+  id: number;
+  name: string;
+  name_kz: string;
+  name_ru?: string;
+  type: 'walking' | 'cycling' | 'mixed';
+  distance_km: number;
+  duration_min: number;
+  difficulty: 'easy' | 'medium' | 'hard';
+  geojson: {
+    type: 'LineString';
+    coordinates: number[][];
+  };
+  co2_saved_g: number;
+  eco_bonus_pts: number;
+  price_tenge: number;
+  is_free: boolean;
+}
+
 const ROUTE_TYPES = [
   { key: 'all', label: 'Барлығы', icon: '🌍', color: '#22C55E' },
   { key: 'walking', label: 'Жаяу', icon: '🚶', color: '#38BDF8' },
@@ -47,7 +67,7 @@ export default function MapPage() {
   const [isNavigating, setIsNavigating] = useState(false);
   const [navError, setNavError] = useState<string | null>(null);
   const [geoLoading, setGeoLoading] = useState(false);
-  const [selectedPredefinedRoute, setSelectedPredefinedRoute] = useState<any>(null);
+  const [selectedPredefinedRoute, setSelectedPredefinedRoute] = useState<EcoRoute | null>(null);
 
   const { data: routesData, isLoading } = useQuery({
     queryKey: ['routes', activeType],
@@ -374,7 +394,7 @@ export default function MapPage() {
   }, []);
 
   // ── Handle predefined cycling route selection ─────────────────
-  const handleSelectPredefinedRoute = useCallback((route: any) => {
+  const handleSelectPredefinedRoute = useCallback((route: EcoRoute) => {
     setSelectedPredefinedRoute(route);
     setNavRoute(route.geojson);
     setNavStats({
