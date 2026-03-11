@@ -399,7 +399,7 @@ export default function MapPage() {
     >
       {/* SIDEBAR */}
       <div
-        className="flex flex-col w-[420px] transition-all duration-300"
+        className="flex flex-col w-[340px] transition-all duration-300"
         style={{
           background: 'linear-gradient(180deg, #FFFFFF 0%, #F0FDF4 100%)',
           borderRight: '2px solid #BBF7D0',
@@ -418,13 +418,13 @@ export default function MapPage() {
             <Link
               href="/"
               style={{
-                width: 52,
-                height: 52,
-                borderRadius: 16,
+                width: 44,
+                height: 44,
+                borderRadius: 14,
                 background: 'linear-gradient(135deg, #22C55E, #16A34A)',
                 display: 'grid',
                 placeItems: 'center',
-                fontSize: 24,
+                fontSize: 20,
                 boxShadow: '0 4px 20px rgba(34, 197, 94, 0.3)',
                 textDecoration: 'none',
               }}
@@ -435,7 +435,7 @@ export default function MapPage() {
               <h1
                 style={{
                   fontWeight: 800,
-                  fontSize: 24,
+                  fontSize: 20,
                   letterSpacing: -0.5,
                   margin: 0,
                   lineHeight: 1,
@@ -446,10 +446,10 @@ export default function MapPage() {
               </h1>
               <p
                 style={{
-                  fontSize: 12,
+                  fontSize: 10,
                   color: '#16A34A',
-                  margin: '4px 0 0',
-                  letterSpacing: 1,
+                  margin: '3px 0 0',
+                  letterSpacing: 0.5,
                   fontWeight: 600,
                 }}
               >
