@@ -178,7 +178,9 @@ npm run dev
 
 ## Cost Considerations
 
-Google Maps API pricing (as of 2024):
+**Note**: Pricing information below is historical (2024). Please verify current rates at [Google Cloud Pricing](https://cloud.google.com/maps-platform/pricing).
+
+Google Maps API pricing (historical reference):
 - **Maps JavaScript API**: $7 per 1000 loads (first 28,000 free per month)
 - **Directions API**: $5 per 1000 requests (first 40,000 free per month)
 
