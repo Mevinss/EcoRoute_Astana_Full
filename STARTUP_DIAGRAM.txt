@@ -1,0 +1,210 @@
+# 🎯 Іске қосу диаграммасы / Startup Flow
+
+```
+┌─────────────────────────────────────────────────────────────────────┐
+│                     EcoRoute Astana - Қадамдық Іске Қосу            │
+└─────────────────────────────────────────────────────────────────────┘
+
+    ┌─────────────┐
+    │   ҚАДАМ 1   │  Docker Desktop орнату
+    │   STEP 1    │  Install Docker Desktop
+    └──────┬──────┘
+           │
+           │  https://www.docker.com/products/docker-desktop/
+           │  Жүктеу → Орнату → Іске қосу
+           │  Download → Install → Launch
+           │
+           ▼
+    ┌─────────────┐
+    │   ҚАДАМ 2   │  Жобаны клондау немесе жүктеу
+    │   STEP 2    │  Clone or download project
+    └──────┬──────┘
+           │
+           │  git clone https://github.com/Mevinss/EcoRoute_Astana_Full.git
+           │  немесе ZIP жүктеу (or download ZIP)
+           │
+           ▼
+    ┌─────────────┐
+    │   ҚАДАМ 3   │  Терминалда жоба папкасына кіру
+    │   STEP 3    │  Navigate to project folder
+    └──────┬──────┘
+           │
+           │  cd EcoRoute_Astana_Full
+           │  dir docker-compose.yml    (файл болуы керек)
+           │
+           ▼
+    ┌─────────────┐
+    │   ҚАДАМ 4   │  Docker Compose іске қосу
+    │   STEP 4    │  Run Docker Compose
+    └──────┬──────┘
+           │
+           │  docker compose up --build
+           │  
+           │  Күту: 3-5 минут ☕
+           │  Wait: 3-5 minutes
+           │
+           ▼
+    ┌─────────────────────────────────────────────┐
+    │  Docker қызметтері іске қосылуда...         │
+    │  Services are starting...                   │
+    ├─────────────────────────────────────────────┤
+    │  ✓ PostgreSQL (port 5432)                   │
+    │  ✓ Redis (port 6379)                        │
+    │  ✓ Backend API (port 4000)                  │
+    │  ✓ Frontend (port 3000)                     │
+    └─────────────────┬───────────────────────────┘
+                      │
+                      ▼
+           ┌──────────────────┐
+           │   ДАЙЫН! READY!  │
+           └──────────────────┘
+                      │
+         ┌────────────┴────────────┐
+         │                         │
+         ▼                         ▼
+   ┌─────────┐              ┌──────────┐
+   │ Browser │              │  Testing │
+   └─────────┘              └──────────┘
+         │                         │
+         │                         │
+   http://localhost:3000     admin@ecoroute.kz
+   http://localhost:3000/map       +
+   http://localhost:4000     Test1234!
+
+
+┌─────────────────────────────────────────────────────────────────────┐
+│                           ЖИІ ҚАТЕЛЕР / ERRORS                       │
+├─────────────────────────────────────────────────────────────────────┤
+│                                                                       │
+│  ❌ "no configuration file"                                          │
+│     → Дұрыс папкада емессіз / Wrong folder                          │
+│     → Шешімі / Solution: cd EcoRoute_Astana_Full                    │
+│                                                                       │
+│  ❌ Карта көрінбейді / Map not showing                               │
+│     → Интернет тексеріңіз / Check internet                          │
+│     → Ctrl+F5 (бетті жаңарту / refresh page)                        │
+│                                                                       │
+│  ❌ "Cannot connect to Docker daemon"                                │
+│     → Docker Desktop іске қосыңыз / Launch Docker Desktop           │
+│     → 30 секунд күтіңіз / Wait 30 seconds                           │
+│                                                                       │
+│  ❌ "Порт бос емес / Port already in use"                            │
+│     → docker compose down                                            │
+│     → Немесе портты өзгерту / Or change port in docker-compose.yml  │
+│                                                                       │
+└─────────────────────────────────────────────────────────────────────┘
+
+
+┌─────────────────────────────────────────────────────────────────────┐
+│                        ПАЙДАЛЫ КОМАНДАЛАР / COMMANDS                 │
+├─────────────────────────────────────────────────────────────────────┤
+│                                                                       │
+│  Статусты тексеру / Check status:                                   │
+│    docker compose ps                                                 │
+│                                                                       │
+│  Логтарды көру / View logs:                                          │
+│    docker compose logs -f                                            │
+│                                                                       │
+│  Тоқтату / Stop:                                                     │
+│    docker compose down                                               │
+│                                                                       │
+│  Қайта іске қосу / Restart:                                          │
+│    docker compose up                                                 │
+│                                                                       │
+│  Барлығын тазалау / Clean all:                                       │
+│    docker compose down -v                                            │
+│    docker compose up --build                                         │
+│                                                                       │
+│  API тексеру / Test API:                                             │
+│    curl http://localhost:4000/health                                 │
+│                                                                       │
+└─────────────────────────────────────────────────────────────────────┘
+
+
+┌─────────────────────────────────────────────────────────────────────┐
+│                      ТЕСТ ТІРКЕЛГІЛЕРІ / TEST ACCOUNTS               │
+├──────────────────────┬────────────────┬──────────────────────────────┤
+│  Email               │  Password      │  Role                        │
+├──────────────────────┼────────────────┼──────────────────────────────┤
+│  admin@ecoroute.kz   │  Test1234!     │  👑 Admin (9999 eco points) │
+│  guide@ecoroute.kz   │  Test1234!     │  🎯 Guide (2900 eco points) │
+│  arman@mail.kz       │  Test1234!     │  👤 User (1240 eco points)  │
+│  dana@gmail.com      │  Test1234!     │  👤 User (2500 eco points)  │
+└──────────────────────┴────────────────┴──────────────────────────────┘
+
+
+┌─────────────────────────────────────────────────────────────────────┐
+│                       URL АДРЕСТЕР / URLs                            │
+├─────────────────────────────────────────────────────────────────────┤
+│                                                                       │
+│  🏠 Басты бет / Home:       http://localhost:3000                   │
+│  🗺️  Карта / Map:           http://localhost:3000/map               │
+│  🔑 Кіру / Login:           http://localhost:3000/auth/login        │
+│  📋 Маршруттар / Routes:    http://localhost:3000/routes            │
+│  👤 Профиль / Profile:      http://localhost:3000/profile           │
+│  🔧 API Health:             http://localhost:4000/health            │
+│  📡 API Routes:             http://localhost:4000/api/routes        │
+│                                                                       │
+└─────────────────────────────────────────────────────────────────────┘
+
+
+┌─────────────────────────────────────────────────────────────────────┐
+│                    ЖОБА ҚҰРЫЛЫМЫ / PROJECT STRUCTURE                 │
+└─────────────────────────────────────────────────────────────────────┘
+
+EcoRoute_Astana_Full/
+│
+├── 📁 frontend/          ← Next.js 14 (React)
+│   ├── src/app/
+│   │   ├── page.tsx                  (басты бет / home)
+│   │   ├── map/page.tsx              (🗺️ карта / map)
+│   │   ├── routes/                   (📋 маршруттар / routes)
+│   │   └── auth/login/page.tsx       (🔑 кіру / login)
+│   └── package.json
+│
+├── 📁 backend/           ← Node.js + Express API
+│   ├── src/
+│   │   ├── routes/
+│   │   │   ├── auth.routes.ts       (POST /api/auth/login)
+│   │   │   ├── routes.routes.ts     (GET /api/routes)
+│   │   │   ├── pois.routes.ts       (GET /api/pois)
+│   │   │   └── navigate.routes.ts   (GET /api/navigate)
+│   │   └── index.ts
+│   └── package.json
+│
+├── 📁 database/          ← PostgreSQL миграциялар / migrations
+│   ├── migrations/
+│   │   └── 007_seed_data.sql        (🌱 бастапқы деректер / seed)
+│   └── seeds/
+│
+├── 📁 docs/              ← Құжаттама / Documentation
+│   ├── AUTHENTICATION.md
+│   ├── GOOGLE_MAPS_INTEGRATION.md
+│   └── API.md
+│
+├── docker-compose.yml    ← 🐳 Docker конфигурация
+├── README.md             ← Толық нұсқаулық / Full guide
+├── QUICKSTART_RU.md      ← Жылдам бастау (RU) / Quick start
+└── SETUP.md              ← Қателерді жою / Troubleshooting
+
+
+┌─────────────────────────────────────────────────────────────────────┐
+│                        ТЕХНОЛОГИЯЛАР / TECH STACK                    │
+├─────────────────────────┬───────────────────────────────────────────┤
+│  Frontend               │  Next.js 14, React, Tailwind CSS          │
+│  Backend                │  Node.js, Express, JWT                    │
+│  Database               │  PostgreSQL 15 + PostGIS                  │
+│  Cache                  │  Redis 7                                  │
+│  Maps                   │  MapLibre GL + CartoDB                    │
+│  DevOps                 │  Docker, Docker Compose                   │
+└─────────────────────────┴───────────────────────────────────────────┘
+
+
+═══════════════════════════════════════════════════════════════════════
+
+                    🌿 ЖАСЫЛ АСТАНА ҮШІН! 🌿
+                    FOR A GREEN ASTANA!
+
+          Made with 💚 in Astana, Kazakhstan 🇰🇿
+
+═══════════════════════════════════════════════════════════════════════
