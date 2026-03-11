@@ -8,6 +8,26 @@ import Link from 'next/link';
 const maplibregl = typeof window !== 'undefined' ? require('maplibre-gl') : null;
 import 'maplibre-gl/dist/maplibre-gl.css';
 
+// TypeScript interfaces for type safety
+interface EcoRoute {
+  id: number;
+  name: string;
+  name_kz: string;
+  name_ru?: string;
+  type: 'walking' | 'cycling' | 'mixed';
+  distance_km: number;
+  duration_min: number;
+  difficulty: 'easy' | 'medium' | 'hard';
+  geojson: {
+    type: 'LineString';
+    coordinates: number[][];
+  };
+  co2_saved_g: number;
+  eco_bonus_pts: number;
+  price_tenge: number;
+  is_free: boolean;
+}
+
 const ROUTE_TYPES = [
   { key: 'all', label: 'Барлығы', icon: '🌍', color: '#22C55E' },
   { key: 'walking', label: 'Жаяу', icon: '🚶', color: '#38BDF8' },
@@ -47,6 +67,7 @@ export default function MapPage() {
   const [isNavigating, setIsNavigating] = useState(false);
   const [navError, setNavError] = useState<string | null>(null);
   const [geoLoading, setGeoLoading] = useState(false);
+  const [selectedPredefinedRoute, setSelectedPredefinedRoute] = useState<EcoRoute | null>(null);
 
   const { data: routesData, isLoading } = useQuery({
     queryKey: ['routes', activeType],
@@ -55,6 +76,16 @@ export default function MapPage() {
       const res = await api.get(`/routes${params}`);
       return res.data;
     },
+  });
+
+  // Query for cycling routes only (for predefined route selection)
+  const { data: cyclingRoutesData } = useQuery({
+    queryKey: ['cycling-routes'],
+    queryFn: async () => {
+      const res = await api.get('/routes?type=cycling');
+      return res.data;
+    },
+    enabled: navMode === 'cycling' && plannerOpen,
   });
 
   const { data: poisData } = useQuery({
@@ -209,6 +240,8 @@ export default function MapPage() {
     if (!map.current || !mapLoaded) return;
     const onClick = (e: any) => {
       if (!plannerOpen) return;
+      // Don't allow point selection if predefined route is selected
+      if (selectedPredefinedRoute) return;
       const { lng, lat } = e.lngLat;
       if (planStep === 'from') {
         setFromPoint([lng, lat]);
@@ -219,7 +252,7 @@ export default function MapPage() {
     };
     map.current.on('click', onClick);
     return () => { map.current?.off('click', onClick); };
-  }, [mapLoaded, plannerOpen, planStep]);
+  }, [mapLoaded, plannerOpen, planStep, selectedPredefinedRoute]);
 
   // ── Route Planner: place markers when points change ───────────
   useEffect(() => {
@@ -347,6 +380,7 @@ export default function MapPage() {
     setNavRoute(null);
     setNavStats(null);
     setNavError(null);
+    setSelectedPredefinedRoute(null);
     setPlanStep('from');
     fromMarkerRef.current?.remove();
     toMarkerRef.current?.remove();
@@ -357,6 +391,19 @@ export default function MapPage() {
       map.current.removeLayer('nav-route-line');
       map.current.removeSource('nav-route');
     }
+  }, []);
+
+  // ── Handle predefined cycling route selection ─────────────────
+  const handleSelectPredefinedRoute = useCallback((route: EcoRoute) => {
+    setSelectedPredefinedRoute(route);
+    setNavRoute(route.geojson);
+    setNavStats({
+      distance_m: route.distance_km * 1000,
+      duration_s: route.duration_min * 60,
+    });
+    setFromPoint(null);
+    setToPoint(null);
+    setNavError(null);
   }, []);
 
   const togglePlanner = useCallback(() => {
@@ -370,6 +417,7 @@ export default function MapPage() {
     setNavMode(mode);
     setNavRoute(null);
     setNavStats(null);
+    setSelectedPredefinedRoute(null);
   }, []);
 
   const formatDuration = (secs: number) => {
@@ -399,7 +447,7 @@ export default function MapPage() {
     >
       {/* SIDEBAR */}
       <div
-        className="flex flex-col w-[420px] transition-all duration-300"
+        className="flex flex-col w-[340px] transition-all duration-300"
         style={{
           background: 'linear-gradient(180deg, #FFFFFF 0%, #F0FDF4 100%)',
           borderRight: '2px solid #BBF7D0',
@@ -418,13 +466,13 @@ export default function MapPage() {
             <Link
               href="/"
               style={{
-                width: 52,
-                height: 52,
-                borderRadius: 16,
+                width: 44,
+                height: 44,
+                borderRadius: 14,
                 background: 'linear-gradient(135deg, #22C55E, #16A34A)',
                 display: 'grid',
                 placeItems: 'center',
-                fontSize: 24,
+                fontSize: 20,
                 boxShadow: '0 4px 20px rgba(34, 197, 94, 0.3)',
                 textDecoration: 'none',
               }}
@@ -435,7 +483,7 @@ export default function MapPage() {
               <h1
                 style={{
                   fontWeight: 800,
-                  fontSize: 24,
+                  fontSize: 20,
                   letterSpacing: -0.5,
                   margin: 0,
                   lineHeight: 1,
@@ -446,10 +494,10 @@ export default function MapPage() {
               </h1>
               <p
                 style={{
-                  fontSize: 12,
+                  fontSize: 10,
                   color: '#16A34A',
-                  margin: '4px 0 0',
-                  letterSpacing: 1,
+                  margin: '3px 0 0',
+                  letterSpacing: 0.5,
                   fontWeight: 600,
                 }}
               >
@@ -555,6 +603,71 @@ export default function MapPage() {
                 </button>
               ))}
             </div>
+
+            {/* Cycling mode: Predefined routes selector */}
+            {navMode === 'cycling' && cyclingRoutesData?.routes && (
+              <div
+                style={{
+                  marginBottom: 16,
+                  padding: '12px',
+                  borderRadius: 14,
+                  background: 'linear-gradient(135deg, #FEF3C7, #FEF9C3)',
+                  border: '2px solid #FCD34D',
+                }}
+              >
+                <div style={{ fontSize: 13, fontWeight: 700, color: '#78350F', marginBottom: 10 }}>
+                  🚴 Дайын велосипед маршруттары
+                </div>
+                <div className="flex flex-col gap-2">
+                  {cyclingRoutesData.routes
+                    .filter((r: any) => r.name_kz.includes('Велосипед:') || r.name_ru.includes('Велосипед:'))
+                    .map((route: any) => (
+                      <button
+                        key={route.id}
+                        onClick={() => handleSelectPredefinedRoute(route)}
+                        style={{
+                          padding: '10px 12px',
+                          borderRadius: 10,
+                          fontSize: 12,
+                          fontWeight: 600,
+                          cursor: 'pointer',
+                          border: selectedPredefinedRoute?.id === route.id ? '2px solid #F59E0B' : '2px solid #FDE047',
+                          background: selectedPredefinedRoute?.id === route.id ? '#FEF3C7' : '#FFFFFF',
+                          color: '#78350F',
+                          textAlign: 'left',
+                          transition: 'all 0.2s',
+                        }}
+                      >
+                        <div style={{ fontWeight: 700, marginBottom: 4 }}>{route.name_kz}</div>
+                        <div style={{ fontSize: 10, color: '#92400E' }}>
+                          {route.distance_km} км • {route.duration_min} мин
+                        </div>
+                      </button>
+                    ))}
+                </div>
+                <div style={{ fontSize: 10, color: '#92400E', marginTop: 8, textAlign: 'center' }}>
+                  немесе картада өзіңіз нүктелерді таңдаңыз ⬇️
+                </div>
+              </div>
+            )}
+
+            {/* Walking mode hint */}
+            {navMode === 'walking' && (
+              <div
+                style={{
+                  marginBottom: 12,
+                  padding: '10px 12px',
+                  borderRadius: 10,
+                  background: '#EFF6FF',
+                  border: '1px solid #BFDBFE',
+                  fontSize: 11,
+                  color: '#1E40AF',
+                  textAlign: 'center',
+                }}
+              >
+                🚶 Жаяу режимде кез келген екі нүктеге маршрут құрыңыз
+              </div>
+            )}
 
             {/* Start point row */}
             <div

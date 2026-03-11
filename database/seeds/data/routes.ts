@@ -154,4 +154,46 @@ export const ECO_ROUTES = [
     co2_saved_g: 510, eco_bonus_pts: 180, price_tenge: 2000, is_free: false,
     geojson: { type: 'LineString', coordinates: [[71.4200,51.1800],[71.4250,51.1820],[71.4280,51.1840]] },
   },
+  {
+    name_kz: 'Велосипед: Президенттік Парк — Ботаникалық Бақ',
+    name_ru: 'Велосипед: Президентский Парк — Ботанический Сад',
+    name_en: 'Cycling: Presidential Park — Botanical Garden',
+    description_ru: 'Живописный велосипедный маршрут от Президентского Парка до Ботанического сада. Комфортная велодорожка, минимум светофоров.',
+    description_kz: 'Президенттік Парктен Ботаникалық Баққа дейінгі көркем велосипед маршруты. Ыңғайлы велодорожка, бағдаршам аз.',
+    distance_km: 7.8, duration_min: 32, difficulty: 'medium', type: 'cycling',
+    co2_saved_g: 1326, eco_bonus_pts: 320, price_tenge: 0, is_free: true,
+    geojson: { type: 'LineString', coordinates: [
+      [71.4300,51.1280], // Presidential Park start
+      [71.4320,51.1300],
+      [71.4280,51.1400],
+      [71.4240,51.1500],
+      [71.4180,51.1600],
+      [71.4120,51.1700],
+      [71.4060,51.1800],
+      [71.4020,51.1900],
+      [71.4000,51.2000],
+      [71.3990,51.2080],
+      [71.3980,51.2100]  // Botanical Garden end
+    ]},
+  },
+  {
+    name_kz: 'Велосипед: Байтерек — EXPO Алаңы',
+    name_ru: 'Велосипед: Байтерек — Площадь EXPO',
+    name_en: 'Cycling: Baiterek — EXPO Plaza',
+    description_ru: 'Скоростной велосипедный маршрут от монумента Байтерек до EXPO 2017. Широкие велодорожки, живописные виды.',
+    description_kz: 'Байтерек ескерткішінен EXPO 2017 дейінгі жылдам велосипед маршруты. Кең велодорожка, керемет көріністер.',
+    distance_km: 9.2, duration_min: 38, difficulty: 'medium', type: 'cycling',
+    co2_saved_g: 1564, eco_bonus_pts: 360, price_tenge: 0, is_free: true,
+    geojson: { type: 'LineString', coordinates: [
+      [71.4300,51.1280], // Baiterek area
+      [71.4350,51.1250],
+      [71.4420,51.1200],
+      [71.4480,51.1150],
+      [71.4540,51.1100],
+      [71.4600,51.1050],
+      [71.4660,51.1000],
+      [71.4710,51.0950],
+      [71.4730,51.0900]  // EXPO Plaza
+    ]},
+  },
 ];
